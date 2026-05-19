@@ -273,7 +273,7 @@ function startApp(){
     ? [['clubs','ชุมนุม','ti-users'],['attendance','เช็คชื่อ','ti-check'],['report','รายงาน','ti-chart-bar']]
     : [['attendance','เช็คชื่อ','ti-check'],['members','สมาชิก','ti-user-plus'],['report','รายงาน','ti-chart-bar']];
   $('mainNav').innerHTML=tabs.map(function(t,i){
-    return '<button class="nav-btn'+(i===0?' active':'')+'" onclick="navTo(''+t[0]+'',this)"><i class="ti '+t[2]+'"></i> '+t[1]+'</button>';
+    return '<button class="nav-btn'+(i===0?' active':'')+'" onclick="navTo(\''+t[0]+'\',this)"><i class="ti '+t[2]+'"></i> '+t[1]+'</button>';
   }).join('');
   if(APP.isAdmin){renderAllClubs();}
   else{
@@ -310,7 +310,7 @@ function renderAllClubs(){
   h+='<div class="club-grid">';
   Object.keys(CLUBS).forEach(function(cid){
     var c=CLUBS[cid];
-    h+='<div class="club-card" onclick="selectClub(''+cid+'')"><div class="club-num" style="font-size:11px;color:var(--gray-400);margin-bottom:2px">'+cid.replace('club','ชุมนุม ')+'</div>';
+    h+='<div class="club-card" onclick="selectClub('\''+cid+'\')"><div class="club-num" style="font-size:11px;color:var(--gray-400);margin-bottom:2px">'+cid.replace('club','ชุมนุม ')+'</div>';
     h+='<div class="club-name">'+c.name+'</div>';
     h+='<div class="club-teacher"><i class="ti ti-user" style="font-size:11px"></i> '+getTeacherNames(cid)+'</div></div>';
   });
@@ -349,8 +349,8 @@ function renderMembers(){
     else members.forEach(function(m){
       h+='<tr><td>'+m.no+'</td><td style="font-weight:500">'+m.name+'</td><td>'+m.class+'</td>';
       h+='<td><div class="td-actions">';
-      h+='<button class="btn btn-sm" onclick="openEditMember(''+m.id+'',''+escq(m.name)+'','+m.no+',''+m.class+'')"><i class="ti ti-edit"></i></button>';
-      h+='<button class="btn btn-sm" style="color:var(--red-600);border-color:var(--red-100)" onclick="deleteMember(''+m.id+'',''+escq(m.name)+'')"><i class="ti ti-trash"></i></button>';
+      h+='<button class="btn btn-sm" onclick="openEditMember('\''+m.id+'\'','\''+escq(m.name)+'\'','+m.no+','\''+m.class+'\')""><i class="ti ti-edit"></i></button>';
+      h+='<button class="btn btn-sm" style="color:var(--red-600);border-color:var(--red-100)" onclick="deleteMember('\''+m.id+'\'','\''+escq(m.name)+'\')""><i class="ti ti-trash"></i></button>';
       h+='</div></td></tr>';
     });
     h+='</tbody></table></div></div></div>';
@@ -517,8 +517,8 @@ function renderAttendanceUI(cid,members,dateKey,att){
   h+='</div>';
   // quick actions
   h+='<div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">';
-  h+='<button class="btn btn-green btn-sm" onclick="markAll(''+cid+'',''+dateKey+'','present')"><i class="ti ti-check-all"></i> มาทั้งหมด</button>';
-  h+='<button class="btn btn-sm" onclick="renderAttendanceUI(''+cid+'',_members,''+dateKey+'',_att)"><i class="ti ti-refresh"></i> รีเฟรช</button>';
+  h+='<button class="btn btn-green btn-sm" onclick="markAll('\''+cid+'\'','\''+dateKey+'\'','present')""><i class="ti ti-check-all"></i> มาทั้งหมด</button>';
+  h+='<button class="btn btn-sm" onclick="renderAttendanceUI('\''+cid+'\'',_members,'\''+dateKey+'\'',_att)""><i class="ti ti-refresh"></i> รีเฟรช</button>';
   h+='</div>';
   h+='<div class="search-box" style="margin-bottom:1rem"><i class="ti ti-search"></i><input id="attSearch" placeholder="ค้นหาชื่อ..." oninput="filterAtt()"></div>';
   h+='<div class="card" style="padding:0"><div class="table-wrap"><table id="attTbl">';
@@ -530,7 +530,7 @@ function renderAttendanceUI(cid,members,dateKey,att){
     h+='<td><div style="display:flex;gap:4px;justify-content:center;flex-wrap:wrap">';
     Object.keys(STATUS).forEach(function(sv){
       var st=STATUS[sv];
-      h+='<button class="status-btn'+(s===sv?' '+st.cls:'')+'" onclick="setStatus(''+cid+'',''+m.id+'',''+dateKey+'',''+sv+'')">'+st.label+'</button>';
+      h+='<button class="status-btn'+(s===sv?' '+st.cls:'')+'" onclick="setStatus('\''+cid+'\'','\''+m.id+'\'','\''+dateKey+'\'','\''+sv+'\')"">'+st.label+'</button>';
     });
     h+='</div></td></tr>';
   });
@@ -646,7 +646,7 @@ function renderReportUI(cid,members,dates,allAtt){
   // date detail tabs
   if(dates.length){
     h+='<div class="card"><h3>รายละเอียดตามวันที่</h3><div class="tab-bar">';
-    dates.forEach(function(dk,i){h+='<button class="tbtn'+(i===0?' active':'')+'" onclick="switchTab('dt_'+dk+'',this)">'+formatThaiDate(dk)+'</button>';});
+    dates.forEach(function(dk,i){h+='<button class="tbtn'+(i===0?' active':'')+'" onclick="switchTab('dt_'+dk,this)"">'+formatThaiDate(dk)+'</button>';});
     h+='</div>';
     dates.forEach(function(dk,i){
       h+='<div class="tc'+(i===0?' active':'')+'" id="dt_'+dk+'"><div class="table-wrap"><table>';
