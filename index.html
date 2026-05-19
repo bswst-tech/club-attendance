@@ -14,7 +14,7 @@
 :root{
   --blue-50:#f0f8fc;--blue-100:#cbe8f2;--blue-400:#4dadd0;
   --blue-600:#2980b9;--blue-800:#1a5c85;
-  --green-50:#f0faf5;--green-100:#d1f0e0;--green-600:#1d6b45;
+  --green-100:#d1f0e0;--green-600:#1d6b45;
   --yellow-100:#fff6c3;--yellow-200:#ffe980;--yellow-800:#7a5c00;
   --red-100:#fde8e8;--red-600:#e53e3e;
   --orange-100:#fff3e0;--orange-600:#e65c00;
@@ -23,26 +23,22 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Sarabun',sans-serif;background:var(--blue-50);color:var(--gray-800);min-height:100vh;display:flex;flex-direction:column}
-/* TOPBAR */
 .topbar{background:var(--blue-600);color:#fff;height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;position:sticky;top:0;z-index:50;box-shadow:var(--shadow)}
 .topbar-brand{display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px}
 .tlogo{width:40px;height:40px;border-radius:50%;background:#fff;overflow:hidden;flex-shrink:0;border:2px solid rgba(255,255,255,.35)}
 .tlogo img{width:100%;height:100%;object-fit:cover}
 .chip-user{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:13px}
-/* NAV */
 .nav-wrap{background:#fff;border-bottom:2px solid var(--blue-100);padding:0 1.5rem;position:sticky;top:60px;z-index:40;overflow-x:auto;white-space:nowrap}
 .nav-btn{display:inline-flex;align-items:center;gap:6px;padding:12px 16px;border:none;background:none;font-family:inherit;font-size:14px;color:var(--gray-400);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:.2s}
 .nav-btn:hover{color:var(--blue-600)}
 .nav-btn.active{color:var(--blue-600);border-bottom-color:var(--blue-600);font-weight:600}
-/* LAYOUT */
 .main-content{flex:1}
 .container{padding:1.5rem;max-width:1100px;margin:0 auto}
 @media(max-width:600px){.container{padding:1rem}}
-/* CARDS */
 .card{background:#fff;border-radius:var(--radius);border:1.5px solid var(--blue-100);padding:1.25rem;box-shadow:var(--shadow)}
+.card+.card{margin-top:1rem}
 .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 @media(max-width:700px){.grid-2{grid-template-columns:1fr}}
-/* BUTTONS */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:var(--radius);font-size:14px;font-family:inherit;cursor:pointer;border:1.5px solid var(--gray-400);background:#fff;color:var(--gray-800);font-weight:500;transition:.15s;white-space:nowrap}
 .btn:hover{background:var(--gray-100)}
 .btn-blue{background:var(--blue-600);color:#fff;border-color:var(--blue-600)}
@@ -51,12 +47,10 @@ body{font-family:'Sarabun',sans-serif;background:var(--blue-50);color:var(--gray
 .btn-red{background:var(--red-600);color:#fff;border-color:var(--red-600)}
 .btn-yellow{background:var(--yellow-100);color:var(--yellow-800);border-color:var(--yellow-200)}
 .btn-sm{padding:5px 12px;font-size:12px}
-/* FORMS */
 .form-group{margin-bottom:.85rem}
 .form-group label{font-size:13px;color:var(--gray-600);display:block;margin-bottom:5px;font-weight:500}
 input,select,textarea{width:100%;padding:9px 12px;border:1.5px solid var(--blue-100);border-radius:var(--radius);font-size:14px;font-family:inherit;background:#fff;color:var(--gray-800);transition:.15s}
 input:focus,select:focus{outline:none;border-color:var(--blue-400);box-shadow:0 0 0 3px rgba(77,173,208,.15)}
-/* TABLE */
 .table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px}
 thead th{background:var(--blue-100);color:var(--blue-800);font-weight:600;padding:10px 12px;text-align:left;font-size:12px;white-space:nowrap}
@@ -64,7 +58,6 @@ tbody tr{border-bottom:1px solid var(--blue-50)}
 tbody tr:hover{background:var(--blue-50)}
 td{padding:9px 12px;vertical-align:middle}
 .td-actions{display:flex;gap:5px;justify-content:flex-end;flex-wrap:wrap}
-/* BADGES */
 .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:600}
 .badge-green{background:var(--green-100);color:var(--green-600)}
 .badge-red{background:var(--red-100);color:var(--red-600)}
@@ -72,46 +65,36 @@ td{padding:9px 12px;vertical-align:middle}
 .badge-orange{background:var(--orange-100);color:var(--orange-600)}
 .badge-blue{background:var(--blue-100);color:var(--blue-800)}
 .badge-gray{background:var(--gray-100);color:var(--gray-600)}
-/* STATUS BUTTONS */
 .status-btn{padding:5px 12px;border-radius:8px;border:1.5px solid var(--gray-400);background:#fff;font-size:12px;font-family:inherit;cursor:pointer;font-weight:500;transition:.15s}
-.status-btn:hover{opacity:.8}
-.status-btn.s-present{background:var(--green-100);color:var(--green-600);border-color:var(--green-600)}
-.status-btn.s-absent{background:var(--red-100);color:var(--red-600);border-color:var(--red-600)}
-.status-btn.s-late{background:var(--orange-100);color:var(--orange-600);border-color:var(--orange-600)}
-.status-btn.s-leave{background:var(--yellow-100);color:var(--yellow-800);border-color:var(--yellow-200)}
-/* SEARCH */
+.s-present{background:var(--green-100);color:var(--green-600);border-color:var(--green-600)}
+.s-absent{background:var(--red-100);color:var(--red-600);border-color:var(--red-600)}
+.s-late{background:var(--orange-100);color:var(--orange-600);border-color:var(--orange-600)}
+.s-leave{background:var(--yellow-100);color:var(--yellow-800);border-color:var(--yellow-200)}
 .search-box{position:relative}
 .search-box i{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--gray-400);pointer-events:none}
 .search-box input{padding-left:36px}
-/* SECTION HEADER */
 .section-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;flex-wrap:wrap;gap:.5rem}
 .text-muted{color:var(--gray-400);font-size:12px}
-.loading{text-align:center;padding:2.5rem;color:var(--gray-400);font-size:14px}
-.empty{text-align:center;padding:2.5rem;color:var(--gray-400);font-size:14px}
+.loading{text-align:center;padding:2.5rem;color:var(--gray-400)}
+.empty{text-align:center;padding:2.5rem;color:var(--gray-400)}
 h2{font-size:17px;font-weight:600;margin-bottom:1rem}
 h3{font-size:15px;font-weight:600;margin-bottom:.6rem}
-/* LOGIN */
 .login-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--blue-100) 0%,var(--green-100) 100%)}
 .login-card{background:#fff;border-radius:16px;padding:2rem 1.75rem;width:340px;box-shadow:0 4px 24px rgba(41,128,185,.15);border:1.5px solid var(--blue-100)}
-/* CLUB SELECT */
 .club-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem}
 .club-card{background:#fff;border:1.5px solid var(--blue-100);border-radius:var(--radius);padding:1rem 1.25rem;cursor:pointer;transition:.2s;box-shadow:var(--shadow)}
 .club-card:hover{background:var(--blue-50);border-color:var(--blue-400);transform:translateY(-2px)}
 .club-card .club-name{font-size:14px;font-weight:700;color:var(--blue-800);margin-bottom:4px}
 .club-card .club-teacher{font-size:12px;color:var(--gray-600)}
-/* DATE PICKER */
 .date-bar{display:flex;align-items:center;gap:.75rem;background:#fff;border:1.5px solid var(--blue-100);border-radius:var(--radius);padding:.75rem 1rem;margin-bottom:1rem;flex-wrap:wrap}
 .date-bar label{font-size:13px;font-weight:500;color:var(--gray-600);white-space:nowrap}
 .date-bar input[type=date]{width:auto;padding:6px 10px;font-size:13px}
-/* STATS */
 .stat-row{display:flex;gap:.75rem;margin-bottom:1rem;flex-wrap:wrap}
-.stat-box{background:#fff;border:1.5px solid var(--blue-100);border-radius:var(--radius);padding:.75rem 1rem;flex:1;min-width:80px;text-align:center}
+.stat-box{background:#fff;border:1.5px solid var(--blue-100);border-radius:var(--radius);padding:.75rem 1rem;flex:1;min-width:70px;text-align:center}
 .stat-num{font-size:22px;font-weight:700}
 .stat-label{font-size:11px;color:var(--gray-400)}
-/* FOOTER */
 .footer{background:var(--blue-800);color:rgba(255,255,255,.75);text-align:center;padding:1rem 1.5rem;font-size:12px;line-height:1.8}
 .footer strong{color:#fff}
-/* TABS */
 .tab-bar{display:flex;gap:4px;border-bottom:2px solid var(--blue-100);margin-bottom:1rem;overflow-x:auto}
 .tbtn{padding:8px 14px;border:none;background:none;font-family:inherit;font-size:13px;color:var(--gray-400);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:.15s}
 .tbtn.active{color:var(--blue-600);border-bottom-color:var(--blue-600);font-weight:600}
@@ -122,7 +105,6 @@ h3{font-size:15px;font-weight:600;margin-bottom:.6rem}
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
     <div style="text-align:center;margin-bottom:1.5rem">
@@ -132,7 +114,7 @@ h3{font-size:15px;font-weight:600;margin-bottom:.6rem}
       <div style="font-size:17px;font-weight:700">ระบบเช็คชื่อกิจกรรมชุมนุม</div>
       <div style="font-size:12px;color:var(--gray-400);margin-top:3px">โรงเรียนบ้านสวนวิทยาคม ภาคเรียนที่ 1/2569</div>
     </div>
-    <div class="form-group"><label>ชื่อผู้ใช้</label><input id="loginUser" type="text" placeholder="username"></div>
+    <div class="form-group"><label>ชื่อผู้ใช้</label><input id="loginUser" type="text" placeholder="username" autocomplete="off"></div>
     <div class="form-group"><label>รหัสผ่าน</label><input id="loginPass" type="password" placeholder="password"></div>
     <button class="btn btn-blue" style="width:100%" id="loginBtn">เข้าสู่ระบบ</button>
   </div>
@@ -142,7 +124,6 @@ h3{font-size:15px;font-weight:600;margin-bottom:.6rem}
   </div>
 </div>
 
-<!-- MAIN APP -->
 <div id="mainApp" style="display:none;flex-direction:column;min-height:100vh">
   <div class="topbar">
     <div class="topbar-brand">
@@ -157,13 +138,12 @@ h3{font-size:15px;font-weight:600;margin-bottom:.6rem}
   <div class="nav-wrap" id="mainNav"></div>
   <div class="main-content" id="pageArea"></div>
   <footer class="footer">
-    <strong>Copyright &copy; 2026 ระบบ &quot;บันทึกกิจกรรมชุมนุม&quot;</strong><br>
+    <strong>Copyright &copy; 2026 ระบบ "บันทึกกิจกรรมชุมนุม"</strong><br>
     By ครูเฟิน &nbsp;|&nbsp; ฝ่ายวิชาการ โรงเรียนบ้านสวนวิทยาคม
   </footer>
 </div>
 
 <script>
-// ── FIREBASE ──
 firebase.initializeApp({
   apiKey:"AIzaSyCYj9mNBVD40f7YxB6jOUWKG0oJ_dypLCw",
   authDomain:"bsw-clubs.firebaseapp.com",
@@ -175,570 +155,677 @@ firebase.initializeApp({
 });
 var db = firebase.database();
 
-// ── CLUBS CONFIG ──
 var CLUBS = {
-  club01:{name:'ห้องสมุดและนันทนาการ', teachers:['Raynu']},
-  club02:{name:'ธนาคารขยะ', teachers:['Wacharapon','Suphalak']},
-  club03:{name:'นักศึกษาวิชาทหาร', teachers:['Aunruean']},
-  club04:{name:'ลูกเสือ e-sports', teachers:['Phatcharin']},
-  club05:{name:'ลูกเสือเพื่อการแข่งขัน', teachers:['Athirat']},
-  club06:{name:'คอมพิวเตอร์', teachers:['Phatsuda','Pasinee']},
-  club07:{name:'วิ่งเพื่อสุขภาพ', teachers:['Pitsanu']},
-  club08:{name:'ครอสเวิร์ด YC และกลองยาว', teachers:['Boonma']},
-  club09:{name:'ดนตรี', teachers:['Kornkoch']},
-  club10:{name:'บอร์ดเกม', teachers:['Mayurachat','Maneerat']},
-  club11:{name:'A-math', teachers:['Suporn','Thanchanok']},
-  club12:{name:'วิทยาศาสตร์', teachers:['Prangtip']},
-  club13:{name:'พับเหรียญโปรยทาน', teachers:['Piyachat']}
+  club01:{name:"ห้องสมุดและนันทนาการ", teachers:["Raynu"]},
+  club02:{name:"ธนาคารขยะ", teachers:["Wacharapon","Suphalak"]},
+  club03:{name:"นักศึกษาวิชาทหาร", teachers:["Aunruean"]},
+  club04:{name:"ลูกเสือ e-sports", teachers:["Phatcharin"]},
+  club05:{name:"ลูกเสือเพื่อการแข่งขัน", teachers:["Athirat"]},
+  club06:{name:"คอมพิวเตอร์", teachers:["Phatsuda","Pasinee"]},
+  club07:{name:"วิ่งเพื่อสุขภาพ", teachers:["Pitsanu"]},
+  club08:{name:"ครอสเวิร์ด YC และกลองยาว", teachers:["Boonma"]},
+  club09:{name:"ดนตรี", teachers:["Kornkoch"]},
+  club10:{name:"บอร์ดเกม", teachers:["Mayurachat","Maneerat"]},
+  club11:{name:"A-math", teachers:["Suporn","Thanchanok"]},
+  club12:{name:"วิทยาศาสตร์", teachers:["Prangtip"]},
+  club13:{name:"พับเหรียญโปรยทาน", teachers:["Piyachat"]}
 };
 
-// ── USERS ──
 var USERS = {
-  Raynu:      {password:'1234', displayName:'ครูเรณู'},
-  Wacharapon: {password:'24032538', displayName:'ครูวัชรพล'},
-  Suphalak:   {password:'1234', displayName:'ครูศุภลักษณ์'},
-  Aunruean:   {password:'1234', displayName:'ครูอุ่นเรือน'},
-  Phatcharin: {password:'1234', displayName:'ครูพัชรินทร์'},
-  Athirat:    {password:'1234', displayName:'ครูอธิราช'},
-  Phatsuda:   {password:'1234', displayName:'ครูภัทรสุดา'},
-  Pasinee:    {password:'1234', displayName:'ครูภาสินี'},
-  Pitsanu:    {password:'1234', displayName:'ครูพิษณุ'},
-  Boonma:     {password:'1234', displayName:'ครูบุญมา'},
-  Kornkoch:   {password:'1234', displayName:'ครูกรกช'},
-  Mayurachat: {password:'1234', displayName:'ครูมยุรฉัตร'},
-  Maneerat:   {password:'1234', displayName:'ครูมณีรัตน์'},
-  Suporn:     {password:'1234', displayName:'ครูศุภร'},
-  Thanchanok: {password:'1234', displayName:'ครูธัญชนก'},
-  Prangtip:   {password:'1234', displayName:'ครูปรางทิพย์'},
-  Piyachat:   {password:'1234', displayName:'ครูปิยะชาติ'},
-  admin:      {password:'admin2569', displayName:'ผู้ดูแลระบบ', isAdmin:true}
+  Raynu:      {password:"1234", displayName:"ครูเรณู"},
+  Wacharapon: {password:"24032538", displayName:"ครูวัชรพล"},
+  Suphalak:   {password:"1234", displayName:"ครูศุภลักษณ์"},
+  Aunruean:   {password:"1234", displayName:"ครูอุ่นเรือน"},
+  Phatcharin: {password:"1234", displayName:"ครูพัชรินทร์"},
+  Athirat:    {password:"1234", displayName:"ครูอธิราช"},
+  Phatsuda:   {password:"1234", displayName:"ครูภัทรสุดา"},
+  Pasinee:    {password:"1234", displayName:"ครูภาสินี"},
+  Pitsanu:    {password:"1234", displayName:"ครูพิษณุ"},
+  Boonma:     {password:"1234", displayName:"ครูบุญมา"},
+  Kornkoch:   {password:"1234", displayName:"ครูกรกช"},
+  Mayurachat: {password:"1234", displayName:"ครูมยุรฉัตร"},
+  Maneerat:   {password:"1234", displayName:"ครูมณีรัตน์"},
+  Suporn:     {password:"1234", displayName:"ครูศุภร"},
+  Thanchanok: {password:"1234", displayName:"ครูธัญชนก"},
+  Prangtip:   {password:"1234", displayName:"ครูปรางทิพย์"},
+  Piyachat:   {password:"1234", displayName:"ครูปิยะชาติ"},
+  admin:      {password:"admin2569", displayName:"ผู้ดูแลระบบ", isAdmin:true}
 };
 
-// ── STATUS CONFIG ──
-var STATUS = {
-  present:{label:'มาเรียน', cls:'s-present', badge:'badge-green', icon:'✅'},
-  absent: {label:'ขาด',     cls:'s-absent',  badge:'badge-red',   icon:'❌'},
-  late:   {label:'มาสาย',   cls:'s-late',    badge:'badge-orange',icon:'⏰'},
-  leave:  {label:'ลา',      cls:'s-leave',   badge:'badge-yellow',icon:'📋'}
-};
+var STATUS_LIST = ["present","absent","late","leave"];
+var STATUS_LABEL = {present:"มาเรียน", absent:"ขาด", late:"มาสาย", leave:"ลา"};
+var STATUS_CLS   = {present:"s-present", absent:"s-absent", late:"s-late", leave:"s-leave"};
+var STATUS_BADGE = {present:"badge-green", absent:"badge-red", late:"badge-orange", leave:"badge-yellow"};
+var STATUS_ICON  = {present:"✅", absent:"❌", late:"⏰", leave:"📋"};
 
-// ── STATE ──
-var APP = {user:'', displayName:'', clubId:'', isAdmin:false};
+var APP = {user:"", displayName:"", clubId:"", isAdmin:false};
+var _curMembers = [];
+var _curAtt     = {};
+var _curDate    = "";
+var _curCid     = "";
 
-// ── HELPERS ──
-function $(id){return document.getElementById(id);}
-function showPage(h){$('pageArea').innerHTML=h;}
-function fmtDate(){return new Date().toLocaleString('th-TH',{timeZone:'Asia/Bangkok',day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});}
-function todayKey(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0');}
-function makeId(no,cls){return String(no).padStart(3,'0')+'_'+cls.replace(/[\/\s\.]/g,'');}
-function escq(s){return(s||'').replace(/'/g,"\\'");}
-function toast(icon,title,text){Swal.fire({icon,title,text:text||'',toast:true,position:'top-end',showConfirmButton:false,timer:3000,timerProgressBar:true});}
-function statusBadge(s){
-  if(!s||!STATUS[s]) return '<span class="badge badge-gray">-</span>';
-  var st=STATUS[s]; return '<span class="badge '+st.badge+'">'+st.icon+' '+st.label+'</span>';
+function G(id){ return document.getElementById(id); }
+function showPage(h){ G("pageArea").innerHTML = h; }
+function todayKey(){
+  var d = new Date();
+  return d.getFullYear() + "-" +
+    String(d.getMonth()+1).padStart(2,"0") + "-" +
+    String(d.getDate()).padStart(2,"0");
 }
-function getMyClubs(){
-  var clubs=[];
-  Object.keys(CLUBS).forEach(function(cid){
-    if(CLUBS[cid].teachers.indexOf(APP.user)>=0) clubs.push(cid);
-  });
-  return clubs;
+function makeId(no, cls){
+  return String(no).padStart(3,"0") + "_" + cls.replace(/[/\s.]/g, "");
+}
+function escHtml(s){ return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;"); }
+function toast(icon, title, text){
+  Swal.fire({icon:icon, title:title, text:text||"", toast:true, position:"top-end",
+    showConfirmButton:false, timer:3000, timerProgressBar:true});
+}
+function statusBadge(s){
+  if(!s || !STATUS_BADGE[s]) return "<span class='badge badge-gray'>-</span>";
+  return "<span class='badge " + STATUS_BADGE[s] + "'>" + STATUS_ICON[s] + " " + STATUS_LABEL[s] + "</span>";
+}
+function formatThaiDate(dk){
+  var p = dk.split("-");
+  var months = ["","ม.ค.","ก.พ.","มี.ค.","เม.ย.","พ.ค.","มิ.ย.","ก.ค.","ส.ค.","ก.ย.","ต.ค.","พ.ย.","ธ.ค."];
+  return parseInt(p[2]) + " " + months[parseInt(p[1])] + " " + (parseInt(p[0])+543);
 }
 function getTeacherNames(cid){
-  return CLUBS[cid].teachers.map(function(u){return USERS[u]?USERS[u].displayName:u;}).join(', ');
+  return CLUBS[cid].teachers.map(function(u){
+    return USERS[u] ? USERS[u].displayName : u;
+  }).join(", ");
+}
+function getMyClubs(){
+  return Object.keys(CLUBS).filter(function(cid){
+    return CLUBS[cid].teachers.indexOf(APP.user) >= 0;
+  });
 }
 
-// ── AUTH ──
+// ── LOGIN ──
 function doLogin(){
-  var u=$('loginUser').value.trim(), p=$('loginPass').value.trim();
-  if(!u||!p){toast('warning','กรุณากรอกข้อมูลให้ครบ');return;}
-  var usr=USERS[u];
-  if(!usr||usr.password!==p){Swal.fire({icon:'error',title:'เข้าสู่ระบบไม่สำเร็จ',text:'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',confirmButtonColor:'#2980b9'});return;}
-  APP.user=u; APP.displayName=usr.displayName; APP.isAdmin=!!usr.isAdmin;
+  var u = G("loginUser").value.trim();
+  var p = G("loginPass").value.trim();
+  if(!u || !p){ toast("warning","กรุณากรอกข้อมูลให้ครบ"); return; }
+  var usr = USERS[u];
+  if(!usr || usr.password !== p){
+    Swal.fire({icon:"error", title:"เข้าสู่ระบบไม่สำเร็จ",
+      text:"ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง", confirmButtonColor:"#2980b9"});
+    return;
+  }
+  APP.user = u;
+  APP.displayName = usr.displayName;
+  APP.isAdmin = !!usr.isAdmin;
   startApp();
 }
 
 function doLogout(){
-  APP={user:'',displayName:'',clubId:'',isAdmin:false};
-  $('mainApp').style.display='none';
-  $('loginScreen').style.display='flex';
+  APP = {user:"", displayName:"", clubId:"", isAdmin:false};
+  G("mainApp").style.display = "none";
+  G("loginScreen").style.display = "flex";
+  G("loginUser").value = "";
+  G("loginPass").value = "";
 }
 
 // ── START APP ──
 function startApp(){
-  $('loginScreen').style.display='none';
-  $('mainApp').style.display='flex';
-  $('topUser').textContent=APP.displayName;
-  var tabs=APP.isAdmin
-    ? [['clubs','ชุมนุม','ti-users'],['attendance','เช็คชื่อ','ti-check'],['report','รายงาน','ti-chart-bar']]
-    : [['attendance','เช็คชื่อ','ti-check'],['members','สมาชิก','ti-user-plus'],['report','รายงาน','ti-chart-bar']];
-  $('mainNav').innerHTML=tabs.map(function(t,i){
-    return '<button class="nav-btn'+(i===0?' active':'')+'" onclick="navTo(\''+t[0]+'\',this)"><i class="ti '+t[2]+'"></i> '+t[1]+'</button>';
-  }).join('');
-  if(APP.isAdmin){renderAllClubs();}
-  else{
-    var myClubs=getMyClubs();
-    if(myClubs.length===1){APP.clubId=myClubs[0];renderAttendance();}
-    else if(myClubs.length>1){pickClubFirst();}
-    else{showPage('<div class="container"><div class="empty">ไม่พบชุมนุมที่ท่านรับผิดชอบ</div></div>');}
+  G("loginScreen").style.display = "none";
+  G("mainApp").style.display = "flex";
+  G("topUser").textContent = APP.displayName;
+  buildNav();
+  if(APP.isAdmin){
+    renderAllClubs();
+  } else {
+    var myClubs = getMyClubs();
+    if(myClubs.length === 0){
+      showPage("<div class='container'><div class='empty'>ไม่พบชุมนุมที่ท่านรับผิดชอบ</div></div>");
+    } else if(myClubs.length === 1){
+      APP.clubId = myClubs[0];
+      renderAttendance();
+    } else {
+      pickClubFirst();
+    }
   }
 }
 
-function navTo(page,btn){
-  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
-  if(btn)btn.classList.add('active');
-  var m={clubs:renderAllClubs,attendance:renderAttendance,members:renderMembers,report:renderReport};
-  if(m[page])m[page]();
+function buildNav(){
+  var tabs = APP.isAdmin
+    ? [["clubs","ชุมนุม","ti-users"],["attendance","เช็คชื่อ","ti-check"],["members","สมาชิก","ti-user-plus"],["report","รายงาน","ti-chart-bar"]]
+    : [["attendance","เช็คชื่อ","ti-check"],["members","สมาชิก","ti-user-plus"],["report","รายงาน","ti-chart-bar"]];
+  var html = "";
+  for(var i=0; i<tabs.length; i++){
+    var t = tabs[i];
+    html += "<button class='nav-btn" + (i===0?" active":"") + "' data-page='" + t[0] + "'>" +
+      "<i class='ti " + t[2] + "'></i> " + t[1] + "</button>";
+  }
+  G("mainNav").innerHTML = html;
+  G("mainNav").querySelectorAll(".nav-btn").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      G("mainNav").querySelectorAll(".nav-btn").forEach(function(b){b.classList.remove("active");});
+      btn.classList.add("active");
+      var page = btn.getAttribute("data-page");
+      if(page==="clubs") renderAllClubs();
+      else if(page==="attendance") renderAttendance();
+      else if(page==="members") renderMembers();
+      else if(page==="report") renderReport();
+    });
+  });
 }
 
-// ── เลือกชุมนุมก่อน (ครูหลายชุมนุม) ──
+function setNavActive(page){
+  G("mainNav").querySelectorAll(".nav-btn").forEach(function(b){
+    b.classList.toggle("active", b.getAttribute("data-page")===page);
+  });
+}
+
+// ── PICK CLUB ──
 function pickClubFirst(){
-  var myClubs=getMyClubs();
-  var opts=myClubs.map(function(cid){return '<option value="'+cid+'">'+CLUBS[cid].name+'</option>';}).join('');
+  var myClubs = getMyClubs();
+  var opts = myClubs.map(function(cid){
+    return "<option value='" + cid + "'>" + CLUBS[cid].name + "</option>";
+  }).join("");
   Swal.fire({
-    title:'เลือกชุมนุมที่ต้องการ',
-    html:'<select id="pickClub" style="font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid var(--blue-100);border-radius:var(--radius);font-size:14px">'+opts+'</select>',
-    confirmButtonText:'เลือก',confirmButtonColor:'#2980b9',
-    allowOutsideClick:false,allowEscapeKey:false,showCancelButton:false,
-    preConfirm:function(){return document.getElementById('pickClub').value;}
-  }).then(function(r){if(r.isConfirmed){APP.clubId=r.value;renderAttendance();}});
+    title:"เลือกชุมนุม",
+    html:"<select id='pickClub' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px'>" + opts + "</select>",
+    confirmButtonText:"เลือก", confirmButtonColor:"#2980b9",
+    allowOutsideClick:false, allowEscapeKey:false,
+    preConfirm:function(){ return document.getElementById("pickClub").value; }
+  }).then(function(r){
+    if(r.isConfirmed){ APP.clubId = r.value; renderAttendance(); }
+  });
 }
 
 // ── ALL CLUBS (admin) ──
 function renderAllClubs(){
-  var h='<div class="container"><div class="section-header"><h2 style="margin:0">ชุมนุมทั้งหมด</h2></div>';
-  h+='<div class="club-grid">';
+  setNavActive("clubs");
+  var h = "<div class='container'><div class='section-header'><h2 style='margin:0'>ชุมนุมทั้งหมด</h2></div><div class='club-grid'>";
   Object.keys(CLUBS).forEach(function(cid){
-    var c=CLUBS[cid];
-    h+='<div class="club-card" onclick="selectClub(&quot;'+cid+'&quot;)"><div class="club-num" style="font-size:11px;color:var(--gray-400);margin-bottom:2px">'+cid.replace('club','ชุมนุม ')+'</div>';
-    h+='<div class="club-name">'+c.name+'</div>';
-    h+='<div class="club-teacher"><i class="ti ti-user" style="font-size:11px"></i> '+getTeacherNames(cid)+'</div></div>';
+    var c = CLUBS[cid];
+    var num = cid.replace("club","");
+    h += "<div class='club-card' id='cc_" + cid + "'>" +
+      "<div style='font-size:11px;color:var(--gray-400);margin-bottom:2px'>ชุมนุม " + num + "</div>" +
+      "<div class='club-name'>" + escHtml(c.name) + "</div>" +
+      "<div class='club-teacher'><i class='ti ti-user' style='font-size:11px'></i> " + escHtml(getTeacherNames(cid)) + "</div></div>";
   });
-  h+='</div></div>';
+  h += "</div></div>";
   showPage(h);
+  // attach click events
+  Object.keys(CLUBS).forEach(function(cid){
+    var el = document.getElementById("cc_" + cid);
+    if(el) el.addEventListener("click", function(){ selectClub(cid); });
+  });
 }
 
 function selectClub(cid){
-  APP.clubId=cid;
-  document.querySelectorAll('.nav-btn').forEach(function(b){b.classList.remove('active');});
-  var btns=document.querySelectorAll('.nav-btn');
-  if(btns.length>0)btns[0].classList.add('active');
+  APP.clubId = cid;
+  setNavActive("attendance");
   renderAttendance();
 }
 
 // ── MEMBERS ──
 function renderMembers(){
-  if(!APP.clubId&&!APP.isAdmin){pickClubFirst();return;}
-  var cid=APP.clubId;
-  showPage('<div class="container"><div class="loading">กำลังโหลด...</div></div>');
-  db.ref('clubs/'+cid+'/members').once('value').then(function(snap){
-    var members=[];
-    if(snap.exists())snap.forEach(function(c){var d=c.val();members.push({id:c.key,no:d.no,name:d.name,class:d.class});});
-    members.sort(function(a,b){return String(a.class).localeCompare(String(b.class))||Number(a.no)-Number(b.no);});
-    var h='<div class="container">';
-    h+='<div class="section-header">';
-    h+='<div><h2 style="margin:0">สมาชิกชุมนุม: '+CLUBS[cid].name+'</h2>';
-    h+='<div class="text-muted">'+members.length+' คน</div></div>';
-    h+='<div style="display:flex;gap:.5rem;flex-wrap:wrap">';
-    h+='<button class="btn btn-yellow" onclick="openImportMembers()"><i class="ti ti-file-spreadsheet"></i> นำเข้า Excel</button>';
-    h+='<button class="btn btn-blue" onclick="openAddMember()"><i class="ti ti-user-plus"></i> เพิ่มสมาชิก</button></div></div>';
-    h+='<div class="search-box" style="margin-bottom:1rem"><i class="ti ti-search"></i><input id="memSearch" placeholder="ค้นหาชื่อ..." oninput="filterMem()"></div>';
-    h+='<div class="card" style="padding:0"><div class="table-wrap"><table id="memTbl">';
-    h+='<thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th>ห้อง</th><th style="text-align:right">จัดการ</th></tr></thead><tbody>';
-    if(!members.length)h+='<tr><td colspan="4" style="text-align:center;padding:2rem;color:var(--gray-400)">ยังไม่มีสมาชิก</td></tr>';
-    else members.forEach(function(m){
-      h+='<tr><td>'+m.no+'</td><td style="font-weight:500">'+m.name+'</td><td>'+m.class+'</td>';
-      h+='<td><div class="td-actions">';
-      h+='<button class="btn btn-sm" onclick="openEditMember(&quot;'+m.id+'&quot;,&quot;'+escq(m.name)+'&quot;,'+m.no+',&quot;'+m.class+'&quot;)"><i class="ti ti-edit"></i></button>';
-      h+='<button class="btn btn-sm" style="color:var(--red-600);border-color:var(--red-100)" onclick="deleteMember(&quot;'+m.id+'&quot;,&quot;'+escq(m.name)+'&quot;)"><i class="ti ti-trash"></i></button>';
-      h+='</div></td></tr>';
+  if(!APP.clubId){ pickClubFirst(); return; }
+  setNavActive("members");
+  var cid = APP.clubId;
+  showPage("<div class='container'><div class='loading'>กำลังโหลด...</div></div>");
+  db.ref("clubs/" + cid + "/members").once("value").then(function(snap){
+    var members = [];
+    if(snap.exists()) snap.forEach(function(c){
+      var d = c.val();
+      members.push({id:c.key, no:d.no, name:d.name, class:d.class});
     });
-    h+='</tbody></table></div></div></div>';
+    members.sort(function(a,b){
+      return String(a.class).localeCompare(String(b.class)) || Number(a.no)-Number(b.no);
+    });
+    var h = "<div class='container'>";
+    h += "<div class='section-header'>";
+    h += "<div><h2 style='margin:0'>สมาชิก: " + escHtml(CLUBS[cid].name) + "</h2>";
+    h += "<div class='text-muted'>" + members.length + " คน</div></div>";
+    h += "<div style='display:flex;gap:.5rem;flex-wrap:wrap'>";
+    h += "<button class='btn btn-yellow' id='btnImport'><i class='ti ti-file-spreadsheet'></i> นำเข้า Excel</button>";
+    h += "<button class='btn btn-blue' id='btnAddMem'><i class='ti ti-user-plus'></i> เพิ่มสมาชิก</button></div></div>";
+    h += "<div class='search-box' style='margin-bottom:1rem'><i class='ti ti-search'></i><input id='memSearch' placeholder='ค้นหาชื่อ...'></div>";
+    h += "<div class='card' style='padding:0'><div class='table-wrap'><table id='memTbl'>";
+    h += "<thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th>ห้อง</th><th style='text-align:right'>จัดการ</th></tr></thead><tbody>";
+    if(!members.length){
+      h += "<tr><td colspan='4' style='text-align:center;padding:2rem;color:var(--gray-400)'>ยังไม่มีสมาชิก</td></tr>";
+    } else {
+      members.forEach(function(m, idx){
+        h += "<tr><td>" + m.no + "</td><td style='font-weight:500'>" + escHtml(m.name) + "</td><td>" + escHtml(m.class) + "</td>";
+        h += "<td><div class='td-actions'>";
+        h += "<button class='btn btn-sm' id='edit_" + idx + "'><i class='ti ti-edit'></i></button>";
+        h += "<button class='btn btn-sm' style='color:var(--red-600);border-color:var(--red-100)' id='del_" + idx + "'><i class='ti ti-trash'></i></button>";
+        h += "</div></td></tr>";
+      });
+    }
+    h += "</tbody></table></div></div></div>";
     showPage(h);
+    // attach events
+    G("btnAddMem").addEventListener("click", openAddMember);
+    G("btnImport").addEventListener("click", openImportMembers);
+    G("memSearch").addEventListener("input", function(){
+      var q = this.value.toLowerCase();
+      document.querySelectorAll("#memTbl tbody tr").forEach(function(r){
+        r.style.display = r.textContent.toLowerCase().includes(q) ? "" : "none";
+      });
+    });
+    members.forEach(function(m, idx){
+      var eBtn = G("edit_" + idx);
+      var dBtn = G("del_" + idx);
+      if(eBtn) eBtn.addEventListener("click", function(){ openEditMember(m); });
+      if(dBtn) dBtn.addEventListener("click", function(){ deleteMember(m.id, m.name); });
+    });
   });
 }
-function filterMem(){var q=$('memSearch').value.toLowerCase();document.querySelectorAll('#memTbl tbody tr').forEach(function(r){r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';});}
 
 function openAddMember(){
   Swal.fire({
-    title:'เพิ่มสมาชิก',
-    html:'<div style="text-align:left">'
-      +'<label style="font-size:13px;font-weight:500;display:block;margin-bottom:4px">เลขที่</label>'
-      +'<input id="mNo" class="swal2-input" type="number" min="1" style="font-family:Sarabun;margin:0 0 10px;width:100%">'
-      +'<label style="font-size:13px;font-weight:500;display:block;margin-bottom:4px">ชื่อ-นามสกุล</label>'
-      +'<input id="mName" class="swal2-input" placeholder="ชื่อ นามสกุล" style="font-family:Sarabun;margin:0 0 10px;width:100%">'
-      +'<label style="font-size:13px;font-weight:500;display:block;margin-bottom:4px">ห้อง</label>'
-      +'<input id="mCls" class="swal2-input" placeholder="เช่น ม.2/1" style="font-family:Sarabun;margin:0;width:100%">'
-      +'</div>',
-    confirmButtonText:'เพิ่ม',confirmButtonColor:'#2980b9',showCancelButton:true,cancelButtonText:'ยกเลิก',
+    title:"เพิ่มสมาชิก",
+    html:"<div style='text-align:left'>" +
+      "<label style='font-size:13px;font-weight:500;display:block;margin-bottom:4px'>เลขที่</label>" +
+      "<input id='mNo' class='swal2-input' type='number' min='1' style='font-family:Sarabun;margin:0 0 10px;width:100%'>" +
+      "<label style='font-size:13px;font-weight:500;display:block;margin-bottom:4px'>ชื่อ-นามสกุล</label>" +
+      "<input id='mName' class='swal2-input' placeholder='ชื่อ นามสกุล' style='font-family:Sarabun;margin:0 0 10px;width:100%'>" +
+      "<label style='font-size:13px;font-weight:500;display:block;margin-bottom:4px'>ห้อง</label>" +
+      "<input id='mCls' class='swal2-input' placeholder='เช่น ม.2/1' style='font-family:Sarabun;margin:0;width:100%'>" +
+      "</div>",
+    confirmButtonText:"เพิ่ม", confirmButtonColor:"#2980b9",
+    showCancelButton:true, cancelButtonText:"ยกเลิก",
     preConfirm:function(){
-      var no=document.getElementById('mNo').value.trim();
-      var name=document.getElementById('mName').value.trim();
-      var cls=document.getElementById('mCls').value.trim();
-      if(!no||!name||!cls){Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบ');return false;}
-      return{no:Number(no),name,cls};
+      var no   = document.getElementById("mNo").value.trim();
+      var name = document.getElementById("mName").value.trim();
+      var cls  = document.getElementById("mCls").value.trim();
+      if(!no||!name||!cls){ Swal.showValidationMessage("กรุณากรอกข้อมูลให้ครบ"); return false; }
+      return {no:Number(no), name:name, cls:cls};
     }
   }).then(function(r){
-    if(!r.isConfirmed)return;
-    var id=makeId(r.value.no,r.value.cls);
-    db.ref('clubs/'+APP.clubId+'/members/'+id).set({no:r.value.no,name:r.value.name,class:r.value.cls})
-      .then(function(){toast('success','เพิ่มสมาชิกสำเร็จ');renderMembers();})
-      .catch(function(e){toast('error','เกิดข้อผิดพลาด',e.message);});
+    if(!r.isConfirmed) return;
+    var id = makeId(r.value.no, r.value.cls);
+    db.ref("clubs/" + APP.clubId + "/members/" + id)
+      .set({no:r.value.no, name:r.value.name, class:r.value.cls})
+      .then(function(){ toast("success","เพิ่มสมาชิกสำเร็จ"); renderMembers(); })
+      .catch(function(e){ toast("error","เกิดข้อผิดพลาด",e.message); });
   });
 }
 
-function openEditMember(id,name,no,cls){
+function openEditMember(m){
   Swal.fire({
-    title:'แก้ไขสมาชิก',
-    html:'<div style="text-align:left">'
-      +'<label style="font-size:13px;font-weight:500;display:block;margin-bottom:4px">เลขที่</label>'
-      +'<input id="eNo" class="swal2-input" type="number" value="'+no+'" style="font-family:Sarabun;margin:0 0 10px;width:100%">'
-      +'<label style="font-size:13px;font-weight:500;display:block;margin-bottom:4px">ชื่อ-นามสกุล</label>'
-      +'<input id="eName" class="swal2-input" value="'+name+'" style="font-family:Sarabun;margin:0 0 10px;width:100%">'
-      +'<label style="font-size:13px;font-weight:500;display:block;margin-bottom:4px">ห้อง</label>'
-      +'<input id="eCls" class="swal2-input" value="'+cls+'" style="font-family:Sarabun;margin:0;width:100%">'
-      +'</div>',
-    confirmButtonText:'บันทึก',confirmButtonColor:'#2980b9',showCancelButton:true,cancelButtonText:'ยกเลิก',
+    title:"แก้ไขสมาชิก",
+    html:"<div style='text-align:left'>" +
+      "<label style='font-size:13px;font-weight:500;display:block;margin-bottom:4px'>เลขที่</label>" +
+      "<input id='eNo' class='swal2-input' type='number' value='" + m.no + "' style='font-family:Sarabun;margin:0 0 10px;width:100%'>" +
+      "<label style='font-size:13px;font-weight:500;display:block;margin-bottom:4px'>ชื่อ-นามสกุล</label>" +
+      "<input id='eName' class='swal2-input' value='" + escHtml(m.name) + "' style='font-family:Sarabun;margin:0 0 10px;width:100%'>" +
+      "<label style='font-size:13px;font-weight:500;display:block;margin-bottom:4px'>ห้อง</label>" +
+      "<input id='eCls' class='swal2-input' value='" + escHtml(m.class) + "' style='font-family:Sarabun;margin:0;width:100%'>" +
+      "</div>",
+    confirmButtonText:"บันทึก", confirmButtonColor:"#2980b9",
+    showCancelButton:true, cancelButtonText:"ยกเลิก",
     preConfirm:function(){
-      var no=document.getElementById('eNo').value.trim();
-      var name=document.getElementById('eName').value.trim();
-      var cls=document.getElementById('eCls').value.trim();
-      if(!no||!name||!cls){Swal.showValidationMessage('กรุณากรอกข้อมูลให้ครบ');return false;}
-      return{no:Number(no),name,cls};
+      var no   = document.getElementById("eNo").value.trim();
+      var name = document.getElementById("eName").value.trim();
+      var cls  = document.getElementById("eCls").value.trim();
+      if(!no||!name||!cls){ Swal.showValidationMessage("กรุณากรอกข้อมูลให้ครบ"); return false; }
+      return {no:Number(no), name:name, cls:cls};
     }
   }).then(function(r){
-    if(!r.isConfirmed)return;
-    db.ref('clubs/'+APP.clubId+'/members/'+id).update({no:r.value.no,name:r.value.name,class:r.value.cls})
-      .then(function(){toast('success','แก้ไขสำเร็จ');renderMembers();})
-      .catch(function(e){toast('error','เกิดข้อผิดพลาด',e.message);});
+    if(!r.isConfirmed) return;
+    db.ref("clubs/" + APP.clubId + "/members/" + m.id)
+      .update({no:r.value.no, name:r.value.name, class:r.value.cls})
+      .then(function(){ toast("success","แก้ไขสำเร็จ"); renderMembers(); })
+      .catch(function(e){ toast("error","เกิดข้อผิดพลาด",e.message); });
   });
 }
 
-function deleteMember(id,name){
-  Swal.fire({icon:'warning',title:'ยืนยันการลบ',text:'ลบ "'+name+'" ออกจากชุมนุม?',confirmButtonText:'ลบ',confirmButtonColor:'#e53e3e',showCancelButton:true,cancelButtonText:'ยกเลิก'})
-  .then(function(r){
-    if(!r.isConfirmed)return;
-    db.ref('clubs/'+APP.clubId+'/members/'+id).remove()
-      .then(function(){toast('success','ลบสำเร็จ');renderMembers();})
-      .catch(function(e){toast('error','เกิดข้อผิดพลาด',e.message);});
+function deleteMember(id, name){
+  Swal.fire({
+    icon:"warning", title:"ยืนยันการลบ", text:"ลบ "" + name + "" ออกจากชุมนุม?",
+    confirmButtonText:"ลบ", confirmButtonColor:"#e53e3e",
+    showCancelButton:true, cancelButtonText:"ยกเลิก"
+  }).then(function(r){
+    if(!r.isConfirmed) return;
+    db.ref("clubs/" + APP.clubId + "/members/" + id).remove()
+      .then(function(){ toast("success","ลบสำเร็จ"); renderMembers(); })
+      .catch(function(e){ toast("error","เกิดข้อผิดพลาด",e.message); });
   });
 }
 
 // ── IMPORT EXCEL ──
 function openImportMembers(){
   Swal.fire({
-    title:'นำเข้าสมาชิกจาก Excel',
-    html:'<div style="text-align:left">'
-      +'<div style="background:var(--yellow-100);border:1.5px solid var(--yellow-200);border-radius:var(--radius);padding:.75rem;font-size:13px;color:var(--yellow-800);margin-bottom:1rem">⚠️ จะเพิ่มเข้าไปในรายชื่อที่มีอยู่ (ไม่ลบรายเดิม)</div>'
-      +'<div style="background:var(--blue-50);border:1.5px solid var(--blue-100);border-radius:var(--radius);padding:.75rem;font-size:13px;margin-bottom:1rem">คอลัมน์ A = เลขที่ | B = ชื่อ-นามสกุล | C = ห้อง</div>'
-      +'<input type="file" id="xlFile" accept=".xlsx,.xls" style="font-family:Sarabun;width:100%">'
-      +'<div id="xlPrev" style="margin-top:.75rem;font-size:13px"></div></div>',
-    confirmButtonText:'นำเข้า',confirmButtonColor:'#2980b9',showCancelButton:true,cancelButtonText:'ยกเลิก',
+    title:"นำเข้าสมาชิกจาก Excel",
+    html:"<div style='text-align:left'>" +
+      "<div style='background:var(--yellow-100);border:1.5px solid var(--yellow-200);border-radius:10px;padding:.75rem;font-size:13px;color:var(--yellow-800);margin-bottom:1rem'>⚠️ จะเพิ่มเข้าไปในรายชื่อที่มีอยู่ (ไม่ลบรายเดิม)</div>" +
+      "<div style='background:var(--blue-50);border:1.5px solid var(--blue-100);border-radius:10px;padding:.75rem;font-size:13px;margin-bottom:1rem'>คอลัมน์ A = เลขที่ | B = ชื่อ-นามสกุล | C = ห้อง<br>แถวแรก = หัวตาราง</div>" +
+      "<input type='file' id='xlFile' accept='.xlsx,.xls' style='font-family:Sarabun;width:100%'>" +
+      "<div id='xlPrev' style='margin-top:.75rem;font-size:13px'></div></div>",
+    confirmButtonText:"นำเข้า", confirmButtonColor:"#2980b9",
+    showCancelButton:true, cancelButtonText:"ยกเลิก",
     didOpen:function(){
-      document.getElementById('xlFile').addEventListener('change',function(e){
-        var file=e.target.files[0];if(!file)return;
-        var reader=new FileReader();
-        reader.onload=function(ev){
+      document.getElementById("xlFile").addEventListener("change", function(e){
+        var file = e.target.files[0]; if(!file) return;
+        var reader = new FileReader();
+        reader.onload = function(ev){
           try{
-            var wb=XLSX.read(ev.target.result,{type:'binary'});
-            var ws=wb.Sheets[wb.SheetNames[0]];
-            var data=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
-            var rows=data.slice(1).filter(function(r){return r[0]&&r[1]&&r[2];});
-            document.getElementById('xlPrev').innerHTML='พบ <strong style="color:var(--blue-600)">'+rows.length+' คน</strong>';
-            document.getElementById('xlFile')._rows=rows;
-          }catch(err){document.getElementById('xlPrev').innerHTML='<span style="color:var(--red-600)">อ่านไฟล์ไม่ได้</span>';}
+            var wb   = XLSX.read(ev.target.result, {type:"binary"});
+            var ws   = wb.Sheets[wb.SheetNames[0]];
+            var data = XLSX.utils.sheet_to_json(ws, {header:1, defval:""});
+            var rows = data.slice(1).filter(function(r){ return r[0]&&r[1]&&r[2]; });
+            document.getElementById("xlPrev").innerHTML = "พบ <strong style='color:var(--blue-600)'>" + rows.length + " คน</strong>";
+            document.getElementById("xlFile")._rows = rows;
+          } catch(err){
+            document.getElementById("xlPrev").innerHTML = "<span style='color:var(--red-600)'>อ่านไฟล์ไม่ได้</span>";
+          }
         };
         reader.readAsBinaryString(file);
       });
     },
-    preConfirm:function(){var rows=document.getElementById('xlFile')._rows;if(!rows||!rows.length){Swal.showValidationMessage('กรุณาเลือกไฟล์');return false;}return rows;}
+    preConfirm:function(){
+      var rows = document.getElementById("xlFile")._rows;
+      if(!rows||!rows.length){ Swal.showValidationMessage("กรุณาเลือกไฟล์"); return false; }
+      return rows;
+    }
   }).then(function(r){
-    if(!r.isConfirmed)return;
-    Swal.fire({title:'กำลังนำเข้า...',allowOutsideClick:false,didOpen:function(){Swal.showLoading();}});
-    var updates={};
+    if(!r.isConfirmed) return;
+    Swal.fire({title:"กำลังนำเข้า...", allowOutsideClick:false, didOpen:function(){Swal.showLoading();}});
+    var updates = {};
     r.value.forEach(function(row){
-      var no=String(row[0]).trim(),name=String(row[1]).trim(),cls=String(row[2]).trim();
-      if(!no||!name||!cls)return;
-      updates['clubs/'+APP.clubId+'/members/'+makeId(no,cls)]={no:Number(no),name,class:cls};
+      var no   = String(row[0]).trim();
+      var name = String(row[1]).trim();
+      var cls  = String(row[2]).trim();
+      if(!no||!name||!cls) return;
+      updates["clubs/" + APP.clubId + "/members/" + makeId(no,cls)] = {no:Number(no), name:name, class:cls};
     });
-    db.ref().update(updates).then(function(){
-      Swal.close();toast('success','นำเข้าสำเร็จ',r.value.length+' คน');renderMembers();
-    }).catch(function(e){Swal.close();toast('error','เกิดข้อผิดพลาด',e.message);});
+    db.ref().update(updates)
+      .then(function(){ Swal.close(); toast("success","นำเข้าสำเร็จ",r.value.length+" คน"); renderMembers(); })
+      .catch(function(e){ Swal.close(); toast("error","เกิดข้อผิดพลาด",e.message); });
   });
 }
 
 // ── ATTENDANCE ──
 function renderAttendance(){
-  if(!APP.clubId){
-    if(APP.isAdmin){renderAllClubs();return;}
-    pickClubFirst();return;
+  if(!APP.clubId){ pickClubFirst(); return; }
+  setNavActive("attendance");
+  var cid   = APP.clubId;
+  var today = todayKey();
+  showPage("<div class='container'><div class='loading'>กำลังโหลด...</div></div>");
+  db.ref("clubs/" + cid + "/members").once("value").then(function(snap){
+    var members = [];
+    if(snap.exists()) snap.forEach(function(c){
+      var d = c.val();
+      members.push({id:c.key, no:d.no, name:d.name, class:d.class});
+    });
+    members.sort(function(a,b){
+      return String(a.class).localeCompare(String(b.class)) || Number(a.no)-Number(b.no);
+    });
+    db.ref("clubs/" + cid + "/attendance/" + today).once("value").then(function(aSnap){
+      var att = {};
+      if(aSnap.exists()) aSnap.forEach(function(c){ att[c.key] = c.val(); });
+      _curMembers = members; _curAtt = att; _curDate = today; _curCid = cid;
+      buildAttendanceUI();
+    });
+  });
+}
+
+function buildAttendanceUI(){
+  var cid     = _curCid;
+  var members = _curMembers;
+  var att     = _curAtt;
+  var dateKey = _curDate;
+  var pCount=0, aCount=0, lCount=0, lvCount=0, nCount=0;
+  members.forEach(function(m){
+    var s = att[m.id];
+    if(s==="present") pCount++;
+    else if(s==="absent") aCount++;
+    else if(s==="late") lCount++;
+    else if(s==="leave") lvCount++;
+    else nCount++;
+  });
+  var h = "<div class='container'>";
+  h += "<div class='section-header'>";
+  h += "<div><h2 style='margin:0'>เช็คชื่อ: " + escHtml(CLUBS[cid].name) + "</h2>";
+  h += "<div class='text-muted'>" + escHtml(getTeacherNames(cid)) + "</div></div>";
+  if(APP.isAdmin){
+    h += "<button class='btn btn-sm' id='btnBackClubs'><i class='ti ti-arrow-left'></i> กลับ</button>";
   }
-  var cid=APP.clubId;
-  var today=todayKey();
-  showPage('<div class="container"><div class="loading">กำลังโหลด...</div></div>');
-  db.ref('clubs/'+cid+'/members').once('value').then(function(snap){
-    var members=[];
-    if(snap.exists())snap.forEach(function(c){var d=c.val();members.push({id:c.key,no:d.no,name:d.name,class:d.class});});
-    members.sort(function(a,b){return String(a.class).localeCompare(String(b.class))||Number(a.no)-Number(b.no);});
-    db.ref('clubs/'+cid+'/attendance/'+today).once('value').then(function(attSnap){
-      var att={};if(attSnap.exists())attSnap.forEach(function(c){att[c.key]=c.val();});
-      renderAttendanceUI(cid,members,today,att);
+  h += "</div>";
+  h += "<div class='date-bar'><label><i class='ti ti-calendar'></i> วันที่:</label>";
+  h += "<input type='date' id='attDate' value='" + dateKey + "'>";
+  h += "<span id='dateDisplay' style='font-size:13px;color:var(--blue-600);font-weight:500'>" + formatThaiDate(dateKey) + "</span></div>";
+  h += "<div class='stat-row'>";
+  h += "<div class='stat-box'><div class='stat-num'>" + members.length + "</div><div class='stat-label'>ทั้งหมด</div></div>";
+  h += "<div class='stat-box'><div class='stat-num' style='color:var(--green-600)'>" + pCount + "</div><div class='stat-label'>มาเรียน</div></div>";
+  h += "<div class='stat-box'><div class='stat-num' style='color:var(--red-600)'>" + aCount + "</div><div class='stat-label'>ขาด</div></div>";
+  h += "<div class='stat-box'><div class='stat-num' style='color:var(--orange-600)'>" + lCount + "</div><div class='stat-label'>มาสาย</div></div>";
+  h += "<div class='stat-box'><div class='stat-num' style='color:var(--yellow-800)'>" + lvCount + "</div><div class='stat-label'>ลา</div></div>";
+  h += "<div class='stat-box'><div class='stat-num' style='color:var(--gray-400)'>" + nCount + "</div><div class='stat-label'>ยังไม่เช็ค</div></div>";
+  h += "</div>";
+  h += "<div style='display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap'>";
+  h += "<button class='btn btn-green btn-sm' id='btnMarkAll'><i class='ti ti-check-all'></i> มาทั้งหมด</button>";
+  h += "</div>";
+  h += "<div class='search-box' style='margin-bottom:1rem'><i class='ti ti-search'></i><input id='attSearch' placeholder='ค้นหาชื่อ...'></div>";
+  h += "<div class='card' style='padding:0'><div class='table-wrap'><table id='attTbl'>";
+  h += "<thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th>ห้อง</th><th>สถานะ</th><th style='text-align:center'>เช็คชื่อ</th></tr></thead><tbody>";
+  members.forEach(function(m, idx){
+    var s = att[m.id] || "";
+    h += "<tr id='row_" + idx + "'>";
+    h += "<td>" + m.no + "</td><td style='font-weight:500'>" + escHtml(m.name) + "</td><td>" + escHtml(m.class) + "</td>";
+    h += "<td id='badge_" + idx + "'>" + statusBadge(s) + "</td>";
+    h += "<td><div style='display:flex;gap:4px;justify-content:center;flex-wrap:wrap'>";
+    STATUS_LIST.forEach(function(sv){
+      var active = s === sv ? " " + STATUS_CLS[sv] : "";
+      h += "<button class='status-btn" + active + "' id='sbtn_" + idx + "_" + sv + "'>" + STATUS_LABEL[sv] + "</button>";
     });
+    h += "</div></td></tr>";
   });
-}
-
-function renderAttendanceUI(cid,members,dateKey,att){
-  var club=CLUBS[cid];
-  var h='<div class="container">';
-  h+='<div class="section-header">';
-  h+='<div><h2 style="margin:0">เช็คชื่อ: '+club.name+'</h2><div class="text-muted">'+getTeacherNames(cid)+'</div></div>';
-  if(APP.isAdmin)h+='<button class="btn btn-sm" onclick="renderAllClubs()"><i class="ti ti-arrow-left"></i> กลับ</button>';
-  h+='</div>';
-  h+='<div class="date-bar"><label><i class="ti ti-calendar"></i> วันที่เช็คชื่อ:</label>';
-  h+='<input type="date" id="attDate" value="'+dateKey+'" onchange="changeAttDate(''+cid+'',this.value)">';
-  h+='<span id="dateDisplay" style="font-size:13px;color:var(--blue-600);font-weight:500">'+formatThaiDate(dateKey)+'</span></div>';
-  // stats
-  var pCount=0,aCount=0,lateCount=0,lvCount=0,noneCount=0;
-  members.forEach(function(m){
-    var s=att[m.id];
-    if(s==='present')pCount++;
-    else if(s==='absent')aCount++;
-    else if(s==='late')lateCount++;
-    else if(s==='leave')lvCount++;
-    else noneCount++;
-  });
-  h+='<div class="stat-row">';
-  h+='<div class="stat-box"><div class="stat-num" style="color:var(--gray-800)">'+members.length+'</div><div class="stat-label">ทั้งหมด</div></div>';
-  h+='<div class="stat-box"><div class="stat-num" style="color:var(--green-600)">'+pCount+'</div><div class="stat-label">มาเรียน</div></div>';
-  h+='<div class="stat-box"><div class="stat-num" style="color:var(--red-600)">'+aCount+'</div><div class="stat-label">ขาด</div></div>';
-  h+='<div class="stat-box"><div class="stat-num" style="color:var(--orange-600)">'+lateCount+'</div><div class="stat-label">มาสาย</div></div>';
-  h+='<div class="stat-box"><div class="stat-num" style="color:var(--yellow-800)">'+lvCount+'</div><div class="stat-label">ลา</div></div>';
-  h+='<div class="stat-box"><div class="stat-num" style="color:var(--gray-400)">'+noneCount+'</div><div class="stat-label">ยังไม่เช็ค</div></div>';
-  h+='</div>';
-  // quick actions
-  h+='<div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap">';
-  h+='<button class="btn btn-green btn-sm" onclick="markAll(&quot;'+cid+'&quot;,&quot;'+dateKey+'&quot;,\'present\')"><i class="ti ti-check-all"></i> มาทั้งหมด</button>';
-  h+='<button class="btn btn-sm" onclick="renderAttendanceUI(&quot;'+cid+'&quot;,_members,&quot;'+dateKey+'&quot;,_att)"><i class="ti ti-refresh"></i> รีเฟรช</button>';
-  h+='</div>';
-  h+='<div class="search-box" style="margin-bottom:1rem"><i class="ti ti-search"></i><input id="attSearch" placeholder="ค้นหาชื่อ..." oninput="filterAtt()"></div>';
-  h+='<div class="card" style="padding:0"><div class="table-wrap"><table id="attTbl">';
-  h+='<thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th>ห้อง</th><th>สถานะ</th><th style="text-align:center">เช็คชื่อ</th></tr></thead><tbody>';
-  members.forEach(function(m){
-    var s=att[m.id]||'';
-    h+='<tr><td>'+m.no+'</td><td style="font-weight:500">'+m.name+'</td><td>'+m.class+'</td>';
-    h+='<td>'+statusBadge(s)+'</td>';
-    h+='<td><div style="display:flex;gap:4px;justify-content:center;flex-wrap:wrap">';
-    Object.keys(STATUS).forEach(function(sv){
-      var st=STATUS[sv];
-      h+='<button class="status-btn'+(s===sv?' '+st.cls:'')+'" onclick="setStatus(&quot;'+cid+'&quot;,&quot;'+m.id+'&quot;,&quot;'+dateKey+'&quot;,&quot;'+sv+'&quot;)">'+st.label+'</button>';
-    });
-    h+='</div></td></tr>';
-  });
-  h+='</tbody></table></div></div></div>';
-  // store for refresh
-  window._members=members; window._att=att;
+  h += "</tbody></table></div></div></div>";
   showPage(h);
-}
 
-function filterAtt(){var q=$('attSearch').value.toLowerCase();document.querySelectorAll('#attTbl tbody tr').forEach(function(r){r.style.display=r.textContent.toLowerCase().includes(q)?'':'none';});}
-
-function formatThaiDate(dateKey){
-  var parts=dateKey.split('-');
-  var months=['','ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
-  return parseInt(parts[2])+' '+months[parseInt(parts[1])]+' '+(parseInt(parts[0])+543);
-}
-
-function changeAttDate(cid,dateKey){
-  document.getElementById('dateDisplay').textContent=formatThaiDate(dateKey);
-  db.ref('clubs/'+cid+'/members').once('value').then(function(snap){
-    var members=[];if(snap.exists())snap.forEach(function(c){var d=c.val();members.push({id:c.key,no:d.no,name:d.name,class:d.class});});
-    members.sort(function(a,b){return String(a.class).localeCompare(String(b.class))||Number(a.no)-Number(b.no);});
-    db.ref('clubs/'+cid+'/attendance/'+dateKey).once('value').then(function(attSnap){
-      var att={};if(attSnap.exists())attSnap.forEach(function(c){att[c.key]=c.val();});
-      renderAttendanceUI(cid,members,dateKey,att);
+  // Events
+  if(G("btnBackClubs")) G("btnBackClubs").addEventListener("click", renderAllClubs);
+  G("attDate").addEventListener("change", function(){
+    _curDate = this.value;
+    G("dateDisplay").textContent = formatThaiDate(this.value);
+    db.ref("clubs/" + cid + "/attendance/" + this.value).once("value").then(function(aSnap){
+      _curAtt = {};
+      if(aSnap.exists()) aSnap.forEach(function(c){ _curAtt[c.key] = c.val(); });
+      buildAttendanceUI();
     });
   });
-}
-
-function setStatus(cid,memberId,dateKey,status){
-  db.ref('clubs/'+cid+'/attendance/'+dateKey+'/'+memberId).set(status).then(function(){
-    // update UI inline
-    if(window._att) window._att[memberId]=status;
-    // update status badge in row
-    var rows=document.querySelectorAll('#attTbl tbody tr');
-    rows.forEach(function(row){
-      var cells=row.querySelectorAll('td');
-      // find row by member id via button onclick attr
-      var btns=row.querySelectorAll('.status-btn');
-      if(btns.length){
-        // get memberId from first btn onclick
-        var attr=btns[0].getAttribute('onclick');
-        if(attr&&attr.indexOf(memberId)>=0){
-          // update badge
-          cells[3].innerHTML=statusBadge(status);
-          // update button active state
-          btns.forEach(function(b){
-            var sv=b.getAttribute('onclick').match(/'([a-z]+)'\)$/);
-            if(sv){
-              b.className='status-btn'+(sv[1]===status?' '+STATUS[sv[1]].cls:'');
-            }
-          });
-        }
-      }
+  G("attSearch").addEventListener("input", function(){
+    var q = this.value.toLowerCase();
+    document.querySelectorAll("#attTbl tbody tr").forEach(function(r){
+      r.style.display = r.textContent.toLowerCase().includes(q) ? "" : "none";
     });
-    // update stats
-    var pCount=0,aCount=0,lateCount=0,lvCount=0,noneCount=0;
-    if(window._members){window._members.forEach(function(m){var s=window._att[m.id];if(s==='present')pCount++;else if(s==='absent')aCount++;else if(s==='late')lateCount++;else if(s==='leave')lvCount++;else noneCount++;});}
-  }).catch(function(e){toast('error','บันทึกไม่สำเร็จ',e.message);});
-}
-
-function markAll(cid,dateKey,status){
-  if(!window._members||!window._members.length){toast('warning','ไม่มีสมาชิก');return;}
-  var updates={};
-  window._members.forEach(function(m){updates['clubs/'+cid+'/attendance/'+dateKey+'/'+m.id]=status;});
-  db.ref().update(updates).then(function(){
-    if(window._att)window._members.forEach(function(m){window._att[m.id]=status;});
-    toast('success','บันทึกสำเร็จ','ทำเครื่องหมาย "'+STATUS[status].label+'" ทั้งหมด');
-    changeAttDate(cid,dateKey);
-  }).catch(function(e){toast('error','เกิดข้อผิดพลาด',e.message);});
+  });
+  G("btnMarkAll").addEventListener("click", function(){
+    var updates = {};
+    _curMembers.forEach(function(m){ updates["clubs/" + cid + "/attendance/" + _curDate + "/" + m.id] = "present"; });
+    db.ref().update(updates).then(function(){
+      _curMembers.forEach(function(m){ _curAtt[m.id] = "present"; });
+      toast("success","บันทึกสำเร็จ","ทำเครื่องหมายมาทั้งหมดแล้ว");
+      buildAttendanceUI();
+    }).catch(function(e){ toast("error","เกิดข้อผิดพลาด",e.message); });
+  });
+  members.forEach(function(m, idx){
+    STATUS_LIST.forEach(function(sv){
+      var btn = G("sbtn_" + idx + "_" + sv);
+      if(!btn) return;
+      btn.addEventListener("click", function(){
+        db.ref("clubs/" + cid + "/attendance/" + _curDate + "/" + m.id).set(sv).then(function(){
+          _curAtt[m.id] = sv;
+          G("badge_" + idx).innerHTML = statusBadge(sv);
+          STATUS_LIST.forEach(function(sv2){
+            var b = G("sbtn_" + idx + "_" + sv2);
+            if(b) b.className = "status-btn" + (sv2===sv ? " " + STATUS_CLS[sv2] : "");
+          });
+        }).catch(function(e){ toast("error","บันทึกไม่สำเร็จ",e.message); });
+      });
+    });
+  });
 }
 
 // ── REPORT ──
 function renderReport(){
-  if(!APP.clubId&&!APP.isAdmin){pickClubFirst();return;}
-  var cid=APP.clubId;
-  showPage('<div class="container"><div class="loading">กำลังโหลด...</div></div>');
-  db.ref('clubs/'+cid+'/members').once('value').then(function(mSnap){
-    var members=[];if(mSnap.exists())mSnap.forEach(function(c){var d=c.val();members.push({id:c.key,no:d.no,name:d.name,class:d.class});});
-    members.sort(function(a,b){return String(a.class).localeCompare(String(b.class))||Number(a.no)-Number(b.no);});
-    db.ref('clubs/'+cid+'/attendance').once('value').then(function(aSnap){
-      var allAtt={};if(aSnap.exists())aSnap.forEach(function(dateNode){var dk=dateNode.key;allAtt[dk]={};dateNode.forEach(function(c){allAtt[dk][c.key]=c.val();});});
-      var dates=Object.keys(allAtt).sort();
-      renderReportUI(cid,members,dates,allAtt);
+  if(!APP.clubId){ pickClubFirst(); return; }
+  setNavActive("report");
+  var cid = APP.clubId;
+  showPage("<div class='container'><div class='loading'>กำลังโหลด...</div></div>");
+  db.ref("clubs/" + cid + "/members").once("value").then(function(mSnap){
+    var members = [];
+    if(mSnap.exists()) mSnap.forEach(function(c){
+      var d = c.val();
+      members.push({id:c.key, no:d.no, name:d.name, class:d.class});
     });
-  });
-}
-
-function renderReportUI(cid,members,dates,allAtt){
-  var club=CLUBS[cid];
-  var h='<div class="container">';
-  h+='<div class="section-header"><div><h2 style="margin:0">รายงาน: '+club.name+'</h2><div class="text-muted">'+dates.length+' ครั้งที่เช็คชื่อ</div></div>';
-  h+='<div style="display:flex;gap:.5rem;flex-wrap:wrap">';
-  h+='<button class="btn btn-yellow" onclick="exportAttendancePDF()"><i class="ti ti-file-type-pdf"></i> PDF</button>';
-  h+='<button class="btn" onclick="exportAttendanceCSV()"><i class="ti ti-download"></i> CSV</button></div></div>';
-  // store for export
-  window._reportData={cid,members,dates,allAtt};
-  if(!members.length){h+='<div class="empty">ยังไม่มีสมาชิก</div></div>';showPage(h);return;}
-  // summary per member
-  h+='<div class="card" style="margin-bottom:1rem;padding:0"><div class="table-wrap"><table>';
-  h+='<thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th>ห้อง</th>';
-  h+='<th style="color:var(--green-600)">มาเรียน</th><th style="color:var(--red-600)">ขาด</th>';
-  h+='<th style="color:var(--orange-600)">สาย</th><th style="color:var(--yellow-800)">ลา</th><th>ยังไม่เช็ค</th></tr></thead><tbody>';
-  members.forEach(function(m){
-    var p=0,a=0,l=0,lv=0,n=0;
-    dates.forEach(function(dk){var s=(allAtt[dk]||{})[m.id];if(s==='present')p++;else if(s==='absent')a++;else if(s==='late')l++;else if(s==='leave')lv++;else n++;});
-    h+='<tr><td>'+m.no+'</td><td style="font-weight:500">'+m.name+'</td><td>'+m.class+'</td>';
-    h+='<td><span class="badge badge-green">'+p+'</span></td><td><span class="badge badge-red">'+a+'</span></td>';
-    h+='<td><span class="badge badge-orange">'+l+'</span></td><td><span class="badge badge-yellow">'+lv+'</span></td>';
-    h+='<td><span class="badge badge-gray">'+n+'</span></td></tr>';
-  });
-  h+='</tbody></table></div></div>';
-  // date detail tabs
-  if(dates.length){
-    h+='<div class="card"><h3>รายละเอียดตามวันที่</h3><div class="tab-bar">';
-    dates.forEach(function(dk,i){h+='<button class="tbtn'+(i===0?' active':'')+'" onclick="switchTab(\'dt_'+dk,this)">'+formatThaiDate(dk)+'</button>';});
-    h+='</div>';
-    dates.forEach(function(dk,i){
-      h+='<div class="tc'+(i===0?' active':'')+'" id="dt_'+dk+'"><div class="table-wrap"><table>';
-      h+='<thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th>ห้อง</th><th>สถานะ</th></tr></thead><tbody>';
-      members.forEach(function(m){
-        var s=(allAtt[dk]||{})[m.id]||'';
-        h+='<tr><td>'+m.no+'</td><td>'+m.name+'</td><td>'+m.class+'</td><td>'+statusBadge(s)+'</td></tr>';
+    members.sort(function(a,b){
+      return String(a.class).localeCompare(String(b.class)) || Number(a.no)-Number(b.no);
+    });
+    db.ref("clubs/" + cid + "/attendance").once("value").then(function(aSnap){
+      var allAtt = {};
+      if(aSnap.exists()) aSnap.forEach(function(dn){
+        allAtt[dn.key] = {};
+        dn.forEach(function(c){ allAtt[dn.key][c.key] = c.val(); });
       });
-      h+='</tbody></table></div></div>';
+      var dates = Object.keys(allAtt).sort();
+      window._reportData = {cid:cid, members:members, dates:dates, allAtt:allAtt};
+      buildReportUI();
     });
-    h+='</div>';
-  }
-  h+='</div>';
-  showPage(h);
+  });
 }
 
-function switchTab(id,btn){document.querySelectorAll('.tbtn').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');document.querySelectorAll('.tc').forEach(function(t){t.classList.remove('active');});$(id).classList.add('active');}
-
-// ── PDF EXPORT (print-based รองรับภาษาไทย) ──
-function exportAttendancePDF(){
-  var d=window._reportData; if(!d){toast('warning','กรุณาเปิดหน้ารายงานก่อน');return;}
-  var clubName=CLUBS[d.cid].name;
-  var win=window.open('','_blank');
-  var html='<!DOCTYPE html><html lang="th"><head><meta charset="UTF-8">'
-    +'<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">'
-    +'<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Sarabun,sans-serif;font-size:12px;padding:16px}'
-    +'.hdr{text-align:center;border-bottom:2px solid #2980b9;padding-bottom:10px;margin-bottom:16px}'
-    +'.hdr h1{font-size:16px;font-weight:700;color:#2980b9}.hdr p{font-size:11px;color:#555;margin-top:3px}'
-    +'table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px}'
-    +'thead th{background:#2980b9;color:#fff;padding:6px 8px;text-align:left}'
-    +'tbody td{padding:5px 8px;border-bottom:1px solid #ddd}'
-    +'tbody tr:nth-child(even){background:#f5f9ff}'
-    +'.sec-title{font-size:13px;font-weight:700;color:#2980b9;margin:12px 0 6px;padding:4px 8px;background:#e8f4fd;border-left:4px solid #2980b9}'
-    +'.g{color:#1d6b45;font-weight:600}.r{color:#e53e3e;font-weight:600}.o{color:#e65c00;font-weight:600}.y{color:#7a5c00;font-weight:600}'
-    +'.footer{text-align:center;margin-top:16px;font-size:10px;color:#888;border-top:1px solid #ddd;padding-top:8px}'
-    +'@media print{button{display:none}}'
-    +'</style></head><body>';
-  html+='<div class="hdr"><h1>รายงานการเช็คชื่อกิจกรรมชุมนุม</h1>';
-  html+='<p>ชุมนุม: '+clubName+' &nbsp;|&nbsp; โรงเรียนบ้านสวนวิทยาคม ภาคเรียนที่ 1/2569</p>';
-  html+='<p>วันที่พิมพ์: '+new Date().toLocaleDateString('th-TH',{year:'numeric',month:'long',day:'numeric'})+'</p></div>';
-  // summary
-  html+='<div class="sec-title">สรุปรายคน</div>';
-  html+='<table><thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th>ห้อง</th><th>มาเรียน</th><th>ขาด</th><th>มาสาย</th><th>ลา</th></tr></thead><tbody>';
+function buildReportUI(){
+  var d = window._reportData;
+  var h = "<div class='container'>";
+  h += "<div class='section-header'>";
+  h += "<div><h2 style='margin:0'>รายงาน: " + escHtml(CLUBS[d.cid].name) + "</h2>";
+  h += "<div class='text-muted'>" + d.dates.length + " ครั้งที่เช็คชื่อ · " + d.members.length + " คน</div></div>";
+  h += "<div style='display:flex;gap:.5rem;flex-wrap:wrap'>";
+  h += "<button class='btn btn-yellow' id='btnPDF'><i class='ti ti-file-type-pdf'></i> PDF</button>";
+  h += "<button class='btn' id='btnCSV'><i class='ti ti-download'></i> CSV</button>";
+  h += "</div></div>";
+  if(!d.members.length){ h += "<div class='empty'>ยังไม่มีสมาชิก</div></div>"; showPage(h); return; }
+  h += "<div class='card' style='margin-bottom:1rem;padding:0'><div class='table-wrap'><table>";
+  h += "<thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th>ห้อง</th>";
+  h += "<th style='color:var(--green-600)'>มา</th><th style='color:var(--red-600)'>ขาด</th>";
+  h += "<th style='color:var(--orange-600)'>สาย</th><th style='color:var(--yellow-800)'>ลา</th></tr></thead><tbody>";
   d.members.forEach(function(m){
-    var p=0,a=0,l=0,lv=0;
-    d.dates.forEach(function(dk){var s=(d.allAtt[dk]||{})[m.id];if(s==='present')p++;else if(s==='absent')a++;else if(s==='late')l++;else if(s==='leave')lv++;});
-    html+='<tr><td>'+m.no+'</td><td>'+m.name+'</td><td>'+m.class+'</td>';
-    html+='<td class="g">'+p+'</td><td class="r">'+a+'</td><td class="o">'+l+'</td><td class="y">'+lv+'</td></tr>';
-  });
-  html+='</tbody></table>';
-  // each date
-  d.dates.forEach(function(dk){
-    html+='<div class="sec-title">'+formatThaiDate(dk)+'</div>';
-    html+='<table><thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th>ห้อง</th><th>สถานะ</th></tr></thead><tbody>';
-    d.members.forEach(function(m){
-      var s=(d.allAtt[dk]||{})[m.id]||'-';
-      var lbl=STATUS[s]?STATUS[s].label:'-';
-      var cls=s==='present'?'g':s==='absent'?'r':s==='late'?'o':s==='leave'?'y':'';
-      html+='<tr><td>'+m.no+'</td><td>'+m.name+'</td><td>'+m.class+'</td><td class="'+cls+'">'+lbl+'</td></tr>';
-    });
-    html+='</tbody></table>';
-  });
-  html+='<div class="footer">Copyright &copy; 2026 ระบบบันทึกกิจกรรมชุมนุม | โรงเรียนบ้านสวนวิทยาคม</div>';
-  html+='<br><div style="text-align:center"><button onclick="window.print()" style="padding:8px 24px;background:#2980b9;color:#fff;border:none;border-radius:8px;font-size:14px;font-family:Sarabun;cursor:pointer">🖨️ พิมพ์ / บันทึก PDF</button></div>';
-  html+='</body></html>';
-  win.document.write(html);win.document.close();
-}
-
-function exportAttendanceCSV(){
-  var d=window._reportData; if(!d){toast('warning','กรุณาเปิดหน้ารายงานก่อน');return;}
-  var csv='\uFEFF'+'เลขที่,ชื่อ-นามสกุล,ห้อง';
-  d.dates.forEach(function(dk){csv+=','+formatThaiDate(dk);});
-  csv+=',มาเรียน,ขาด,มาสาย,ลา\n';
-  d.members.forEach(function(m){
-    csv+=m.no+',"'+m.name+'",'+m.class;
     var p=0,a=0,l=0,lv=0;
     d.dates.forEach(function(dk){
-      var s=(d.allAtt[dk]||{})[m.id]||'';
-      csv+=','+(STATUS[s]?STATUS[s].label:'-');
-      if(s==='present')p++;else if(s==='absent')a++;else if(s==='late')l++;else if(s==='leave')lv++;
+      var s = (d.allAtt[dk]||{})[m.id];
+      if(s==="present")p++; else if(s==="absent")a++; else if(s==="late")l++; else if(s==="leave")lv++;
     });
-    csv+=','+p+','+a+','+l+','+lv+'\n';
+    h += "<tr><td>" + m.no + "</td><td style='font-weight:500'>" + escHtml(m.name) + "</td><td>" + escHtml(m.class) + "</td>";
+    h += "<td><span class='badge badge-green'>" + p + "</span></td>";
+    h += "<td><span class='badge badge-red'>" + a + "</span></td>";
+    h += "<td><span class='badge badge-orange'>" + l + "</span></td>";
+    h += "<td><span class='badge badge-yellow'>" + lv + "</span></td></tr>";
   });
-  var a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
-  a.download='เช็คชื่อ_'+CLUBS[d.cid].name+'.csv';a.click();
+  h += "</tbody></table></div></div>";
+  if(d.dates.length){
+    h += "<div class='card'><h3>รายละเอียดตามวันที่</h3><div class='tab-bar'>";
+    d.dates.forEach(function(dk,i){
+      h += "<button class='tbtn" + (i===0?" active":"") + "' id='dtbtn_" + i + "' data-tid='dt_" + dk + "'>" + formatThaiDate(dk) + "</button>";
+    });
+    h += "</div>";
+    d.dates.forEach(function(dk,i){
+      h += "<div class='tc" + (i===0?" active":"") + "' id='dt_" + dk + "'><div class='table-wrap'><table>";
+      h += "<thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th>ห้อง</th><th>สถานะ</th></tr></thead><tbody>";
+      d.members.forEach(function(m){
+        var s = (d.allAtt[dk]||{})[m.id] || "";
+        h += "<tr><td>" + m.no + "</td><td>" + escHtml(m.name) + "</td><td>" + escHtml(m.class) + "</td><td>" + statusBadge(s) + "</td></tr>";
+      });
+      h += "</tbody></table></div></div>";
+    });
+    h += "</div>";
+  }
+  h += "</div>";
+  showPage(h);
+  G("btnPDF").addEventListener("click", exportPDF);
+  G("btnCSV").addEventListener("click", exportCSV);
+  // Tab events
+  d.dates.forEach(function(dk,i){
+    var btn = G("dtbtn_" + i);
+    if(!btn) return;
+    btn.addEventListener("click", function(){
+      document.querySelectorAll(".tbtn").forEach(function(b){b.classList.remove("active");});
+      document.querySelectorAll(".tc").forEach(function(t){t.classList.remove("active");});
+      btn.classList.add("active");
+      G("dt_" + dk).classList.add("active");
+    });
+  });
 }
 
-// ── EVENTS ──
-document.getElementById('loginBtn').addEventListener('click',doLogin);
-document.getElementById('loginPass').addEventListener('keypress',function(e){if(e.key==='Enter')doLogin();});
-document.getElementById('logoutBtn').addEventListener('click',doLogout);
+function exportPDF(){
+  var d = window._reportData; if(!d){return;}
+  var win = window.open("","_blank");
+  var html = "<!DOCTYPE html><html lang='th'><head><meta charset='UTF-8'>" +
+    "<link href='https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap' rel='stylesheet'>" +
+    "<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Sarabun,sans-serif;font-size:12px;padding:16px}" +
+    ".hdr{text-align:center;border-bottom:2px solid #2980b9;padding-bottom:10px;margin-bottom:16px}" +
+    ".hdr h1{font-size:16px;font-weight:700;color:#2980b9}.hdr p{font-size:11px;color:#555;margin-top:3px}" +
+    "table{width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px}" +
+    "thead th{background:#2980b9;color:#fff;padding:6px 8px;text-align:left}" +
+    "tbody td{padding:5px 8px;border-bottom:1px solid #ddd}" +
+    "tbody tr:nth-child(even){background:#f5f9ff}" +
+    ".sec{font-size:13px;font-weight:700;color:#2980b9;margin:12px 0 6px;padding:4px 8px;background:#e8f4fd;border-left:4px solid #2980b9}" +
+    ".g{color:#1d6b45;font-weight:600}.r{color:#e53e3e;font-weight:600}.o{color:#e65c00;font-weight:600}.y{color:#7a5c00;font-weight:600}" +
+    ".footer{text-align:center;margin-top:16px;font-size:10px;color:#888;border-top:1px solid #ddd;padding-top:8px}" +
+    "@media print{button{display:none}}</style></head><body>";
+  html += "<div class='hdr'><h1>รายงานการเช็คชื่อกิจกรรมชุมนุม</h1>";
+  html += "<p>ชุมนุม: " + CLUBS[d.cid].name + " | โรงเรียนบ้านสวนวิทยาคม ภาคเรียนที่ 1/2569</p>";
+  html += "<p>วันที่พิมพ์: " + new Date().toLocaleDateString("th-TH",{year:"numeric",month:"long",day:"numeric"}) + "</p></div>";
+  html += "<div class='sec'>สรุปรายคน</div>";
+  html += "<table><thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th>ห้อง</th><th>มาเรียน</th><th>ขาด</th><th>มาสาย</th><th>ลา</th></tr></thead><tbody>";
+  d.members.forEach(function(m){
+    var p=0,a=0,l=0,lv=0;
+    d.dates.forEach(function(dk){
+      var s=(d.allAtt[dk]||{})[m.id];
+      if(s==="present")p++; else if(s==="absent")a++; else if(s==="late")l++; else if(s==="leave")lv++;
+    });
+    html += "<tr><td>" + m.no + "</td><td>" + m.name + "</td><td>" + m.class + "</td>";
+    html += "<td class='g'>" + p + "</td><td class='r'>" + a + "</td><td class='o'>" + l + "</td><td class='y'>" + lv + "</td></tr>";
+  });
+  html += "</tbody></table>";
+  d.dates.forEach(function(dk){
+    html += "<div class='sec'>" + formatThaiDate(dk) + "</div>";
+    html += "<table><thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th>ห้อง</th><th>สถานะ</th></tr></thead><tbody>";
+    d.members.forEach(function(m){
+      var s = (d.allAtt[dk]||{})[m.id] || "";
+      var lbl = STATUS_LABEL[s] || "-";
+      var cls = s==="present"?"g":s==="absent"?"r":s==="late"?"o":s==="leave"?"y":"";
+      html += "<tr><td>" + m.no + "</td><td>" + m.name + "</td><td>" + m.class + "</td><td class='" + cls + "'>" + lbl + "</td></tr>";
+    });
+    html += "</tbody></table>";
+  });
+  html += "<div class='footer'>Copyright &copy; 2026 ระบบบันทึกกิจกรรมชุมนุม | โรงเรียนบ้านสวนวิทยาคม</div>";
+  html += "<br><div style='text-align:center'><button onclick='window.print()' style='padding:8px 24px;background:#2980b9;color:#fff;border:none;border-radius:8px;font-size:14px;font-family:Sarabun;cursor:pointer'>🖨️ พิมพ์ / บันทึก PDF</button></div>";
+  html += "</body></html>";
+  win.document.write(html); win.document.close();
+}
+
+function exportCSV(){
+  var d = window._reportData; if(!d){return;}
+  var csv = "\uFEFF" + "เลขที่,ชื่อ-นามสกุล,ห้อง";
+  d.dates.forEach(function(dk){ csv += "," + formatThaiDate(dk); });
+  csv += ",มาเรียน,ขาด,มาสาย,ลา\n";
+  d.members.forEach(function(m){
+    csv += m.no + ',"' + m.name + '",' + m.class;
+    var p=0,a=0,l=0,lv=0;
+    d.dates.forEach(function(dk){
+      var s = (d.allAtt[dk]||{})[m.id] || "";
+      csv += "," + (STATUS_LABEL[s]||"-");
+      if(s==="present")p++; else if(s==="absent")a++; else if(s==="late")l++; else if(s==="leave")lv++;
+    });
+    csv += "," + p + "," + a + "," + l + "," + lv + "\n";
+  });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8;"}));
+  a.download = "เช็คชื่อ_" + CLUBS[d.cid].name + ".csv";
+  a.click();
+}
+
+// ── INIT ──
+G("loginBtn").addEventListener("click", doLogin);
+G("loginPass").addEventListener("keypress", function(e){ if(e.key==="Enter") doLogin(); });
+G("logoutBtn").addEventListener("click", doLogout);
 </script>
 </body>
 </html>
