@@ -1201,7 +1201,14 @@ function renderStudentPortal(){
       if(cdata.attendance){Object.keys(cdata.attendance).forEach(function(dk){var s=(cdata.attendance[dk]||{})[sid];if(s==="present")p++;else if(s==="absent")a++;else if(s==="late")l++;else if(s==="leave")lv++;if(s)total++;});}
       myClubAtt[clubK.key]={p:p,a:a,l:l,lv:lv,total:total,name:CLUBS[clubK.key]?CLUBS[clubK.key].name:clubK.key};
     });
-    var subKeys=Object.keys(subjects);
+    // กรองเฉพาะวิชาที่ห้องนักเรียนอยู่ใน subject.classes
+    var myClass=stuData.class||"";
+    var subKeys=Object.keys(subjects).filter(function(sk){
+      var subj=subjects[sk];
+      if(!subj.classes)return true; // ถ้าไม่ได้ตั้งค่า ให้แสดงทุกห้อง (backward compat)
+      return Object.values(subj.classes).indexOf(myClass)>=0;
+    });
+
     var h="<div class='container'>";
     h+="<div style='background:linear-gradient(135deg,var(--blue-600),var(--blue-400));color:#fff;border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem;box-shadow:0 4px 16px rgba(41,128,185,.25)'>";
     h+="<div style='font-size:20px;font-weight:700'>"+escH(stuData.name||APP.displayName)+"</div>";
