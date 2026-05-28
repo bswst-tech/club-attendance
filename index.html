@@ -1291,23 +1291,73 @@ function renderStudentPortal(){
       });
       h+="</div>";
     }
-    h+="<div class='portal-section'><h3><i class='ti ti-star'></i> คะแนนเก็บ</h3>";
+    // สรุปสถานะงานทั้งหมดของนักเรียน
+    var totalPending=0,totalSubmitted=0,totalAsn=0;
+    subKeys.forEach(function(sk){
+      var asnMap=(allAssignments[sk]||{})[clsKey]||{};
+      var myS=myScores[sk]||{};
+      Object.keys(asnMap).forEach(function(ak){
+        totalAsn++;
+        var sc=myS[ak];
+        if(sc===undefined||sc===null||sc==="") totalPending++;
+        else totalSubmitted++;
+      });
+    });
+
+    // Summary banner
+    var summaryBg,summaryIcon,summaryText;
+    if(totalAsn===0){
+      summaryBg="var(--gray-100)";summaryIcon="📋";summaryText="ยังไม่มีงานที่ได้รับมอบหมาย";
+    } else if(totalPending===0){
+      summaryBg="var(--green-100)";summaryIcon="✅";summaryText="ส่งงานครบทุกชิ้นแล้ว! ("+totalSubmitted+"/"+totalAsn+" งาน)";
+    } else if(totalPending===totalAsn){
+      summaryBg="rgba(229,62,62,.10)";summaryIcon="❌";summaryText="ยังไม่ส่งงานเลย! ค้างอยู่ "+totalPending+" งาน";
+    } else {
+      summaryBg="var(--orange-100)";summaryIcon="⏳";summaryText="ส่งแล้ว "+totalSubmitted+" งาน | ยังค้างอีก "+totalPending+" งาน";
+    }
+    h+="<div class='portal-section'>";
+    h+="<h3><i class='ti ti-star'></i> คะแนนเก็บ</h3>";
+    if(totalAsn>0){
+      var borderColor=totalPending===0?"var(--green-600)":totalPending===totalAsn?"var(--red-600)":"var(--orange-600)";
+      h+="<div style='background:"+summaryBg+";border:2px solid "+borderColor+";border-radius:var(--radius);padding:.75rem 1rem;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;font-size:14px;font-weight:700'>";
+      h+=summaryIcon+" "+summaryText;
+      h+="</div>";
+    }
     var hasScore=false;
     subKeys.forEach(function(sk){
       var subj=subjects[sk];var asnMap=(allAssignments[sk]||{})[clsKey]||{};var asnKeys=Object.keys(asnMap);
       if(!asnKeys.length)return;hasScore=true;
-      var myS=myScores[sk]||{};var total=0,maxTotal=0,submitted=0;
-      h+="<div style='border:1.5px solid var(--blue-100);border-radius:var(--radius);padding:.75rem;margin-bottom:.75rem'>";
-      h+="<div style='font-weight:700;font-size:14px;margin-bottom:.5rem;color:var(--blue-800)'>"+escH(subj.name)+"</div>";
+      var myS=myScores[sk]||{};var total=0,maxTotal=0,submitted=0,pending=0;
+      asnKeys.forEach(function(ak){var sc=myS[ak];if(sc===undefined||sc===null||sc==="")pending++;else submitted++;});
+      // subject header with status
+      var subjStatus=pending===0
+        ?"<span class='badge badge-green' style='font-size:11px'>✅ ส่งครบ</span>"
+        :pending===asnKeys.length
+          ?"<span class='badge badge-red' style='font-size:11px;font-weight:700'>❌ ยังไม่ส่ง "+pending+" งาน</span>"
+          :"<span class='badge badge-orange' style='font-size:11px'>⏳ ค้าง "+pending+"/"+asnKeys.length+"</span>";
+      var cardBorder=pending===0?"var(--green-600)":pending===asnKeys.length?"var(--red-600)":"var(--orange-600)";
+      h+="<div style='border:1.5px solid "+cardBorder+";border-radius:var(--radius);padding:.75rem;margin-bottom:.75rem'>";
+      h+="<div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem'>";
+      h+="<span style='font-weight:700;font-size:14px;color:var(--blue-800)'>"+escH(subj.name)+"</span>"+subjStatus+"</div>";
       h+="<div class='table-wrap'><table><thead><tr><th>งาน/กิจกรรม</th><th style='text-align:center'>เต็ม</th><th style='text-align:center'>ได้รับ</th><th>สถานะ</th></tr></thead><tbody>";
       asnKeys.forEach(function(ak){
         var asn=asnMap[ak];var sc=myS[ak];maxTotal+=Number(asn.maxScore||0);
-        var sentChip,scDisp;
-        if(sc===undefined||sc===null||sc===""){sentChip="<span class='badge badge-gray'>ยังไม่บันทึก</span>";scDisp="-";}
-        else{var num=Number(sc);total+=num;submitted++;var pct2=asn.maxScore>0?Math.round((num/Number(asn.maxScore))*100):0;sentChip="<span class='score-chip "+(pct2>=80?"score-good":pct2>=60?"score-warn":"score-bad")+"'>"+pct2+"%</span>";scDisp=num;}
-        h+="<tr><td>"+escH(asn.name||ak)+"</td><td style='text-align:center'>"+asn.maxScore+"</td><td style='text-align:center;font-weight:700'>"+scDisp+"</td><td>"+sentChip+"</td></tr>";
+        var sentChip,scDisp,rowStyle="";
+        if(sc===undefined||sc===null||sc===""){
+          sentChip="<span style='display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(229,62,62,.12);color:var(--red-600);border:1px solid rgba(229,62,62,.3)'>❌ ยังไม่ส่ง</span>";
+          scDisp="-";
+          rowStyle="background:rgba(229,62,62,.04)";
+        } else {
+          var num=Number(sc);total+=num;submitted++;
+          var pct2=asn.maxScore>0?Math.round((num/Number(asn.maxScore))*100):0;
+          sentChip="<span class='score-chip "+(pct2>=80?"score-good":pct2>=60?"score-warn":"score-bad")+"'>"+pct2+"%</span>";
+          scDisp=num;
+        }
+        h+="<tr style='"+rowStyle+"'><td>"+escH(asn.name||ak)+"</td><td style='text-align:center'>"+asn.maxScore+"</td><td style='text-align:center;font-weight:700'>"+scDisp+"</td><td>"+sentChip+"</td></tr>";
       });
-      h+="</tbody></table></div><div style='margin-top:.5rem;font-size:13px;font-weight:600;color:var(--blue-800)'>รวม: "+total+"/"+maxTotal+" ("+( maxTotal>0?Math.round((total/maxTotal)*100):0)+"%) | บันทึกแล้ว "+submitted+"/"+asnKeys.length+" งาน</div></div>";
+      h+="</tbody></table></div>";
+      var tp=maxTotal>0?Math.round((total/maxTotal)*100):0;
+      h+="<div style='margin-top:.5rem;font-size:13px;font-weight:600;color:var(--blue-800)'>รวม: "+total+"/"+maxTotal+" ("+tp+"%) | ส่งแล้ว "+submitted+"/"+asnKeys.length+" งาน</div></div>";
     });
     if(!hasScore) h+="<div class='empty' style='padding:1.5rem'>ยังไม่มีคะแนนบันทึก</div>";
     h+="</div></div>";
