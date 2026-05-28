@@ -1039,21 +1039,51 @@ function loadScoreTable(subKey,subject,cls,allStudents){
         h+="<div class='card'><div class='empty'>ยังไม่มีงาน/กิจกรรมสำหรับห้องนี้<br><span class='text-muted'>กดปุ่ม เพิ่มงาน ด้านบน</span></div></div>";
       } else {
         h+="<div class='card' style='padding:0'><div class='table-wrap'><table id='scTbl'>";
-        h+="<thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th>";
+        // นับสถิติการยังไม่ส่งงาน
+        var notSubmittedCount={};
+        assignments.forEach(function(asn){notSubmittedCount[asn.id]=0;});
+        students.forEach(function(s){
+          assignments.forEach(function(asn){
+            var sc=(scores[s.id]||{})[asn.id];
+            if(sc===undefined||sc===null||sc==="") notSubmittedCount[asn.id]++;
+          });
+        });
+
+        h+="<thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th style='text-align:center'>สถานะ</th>";
         assignments.forEach(function(asn){
-          h+="<th style='text-align:center;white-space:nowrap'><div>"+escH(asn.name)+"</div><div style='font-weight:400;font-size:11px;color:var(--gray-400)'>เต็ม "+asn.maxScore+"</div></th>";
+          var ns=notSubmittedCount[asn.id]||0;
+          var nsTag=ns>0?"<div style='color:var(--red-600);font-size:10px;font-weight:700'>⚠ ยังไม่ส่ง: "+ns+"</div>":"";
+          h+="<th style='text-align:center;white-space:nowrap'><div>"+escH(asn.name)+"</div><div style='font-weight:400;font-size:11px;color:var(--gray-400)'>เต็ม "+asn.maxScore+"</div>"+nsTag+"</th>";
         });
         h+="<th style='text-align:center'>รวม</th></tr></thead><tbody>";
         students.forEach(function(s,idx){
-          var total=0,maxTotal=0;
-          h+="<tr><td>"+s.no+"</td><td style='font-weight:500'>"+escH(s.name)+"</td>";
+          var total=0,maxTotal=0,notSub=0;
+          // pre-scan to count not-submitted for this student
+          assignments.forEach(function(asn){
+            var sc=(scores[s.id]||{})[asn.id];
+            if(sc===undefined||sc===null||sc==="") notSub++;
+          });
+          var rowBg=notSub>0?"background:rgba(229,62,62,.04)":"";
+          h+="<tr style='"+rowBg+"'><td>"+s.no+"</td><td style='font-weight:500'>"+escH(s.name)+"</td>";
+          // status chip
+          if(notSub===0){
+            h+="<td style='text-align:center'><span class='badge badge-green' style='font-size:11px'>✅ ส่งครบ</span></td>";
+          } else if(notSub===assignments.length){
+            h+="<td style='text-align:center'><span class='badge badge-red' style='font-size:11px;font-weight:700'>❌ ยังไม่ส่ง "+notSub+" งาน</span></td>";
+          } else {
+            h+="<td style='text-align:center'><span class='badge badge-orange' style='font-size:11px'>⏳ ค้าง "+notSub+"/"+assignments.length+"</span></td>";
+          }
           assignments.forEach(function(asn,ai){
             var sc=(scores[s.id]||{})[asn.id];
             maxTotal+=Number(asn.maxScore||0);
             if(sc!==undefined&&sc!==null&&sc!==""){total+=Number(sc);}
-            var displayed=sc===undefined||sc===null||sc===""?"":sc;
+            var isEmpty=sc===undefined||sc===null||sc==="";
+            var displayed=isEmpty?"":sc;
+            var cellStyle=isEmpty
+              ?"background:rgba(229,62,62,.10);border:1.5px solid rgba(229,62,62,.35);border-radius:6px"
+              :"border:1.5px solid var(--gray-200);border-radius:6px";
             h+="<td style='text-align:center;padding:4px 8px'>";
-            h+="<input type='number' id='sc_"+idx+"_"+ai+"' value='"+displayed+"' min='0' max='"+asn.maxScore+"' style='width:60px;padding:4px 6px;text-align:center;font-size:13px;border:1.5px solid var(--gray-200);border-radius:6px'>";
+            h+="<input type='number' id='sc_"+idx+"_"+ai+"' value='"+displayed+"' min='0' max='"+asn.maxScore+"' style='width:60px;padding:4px 6px;text-align:center;font-size:13px;"+cellStyle+"'>";
             h+="</td>";
           });
           var pct=maxTotal>0?Math.round((total/maxTotal)*100):0;
@@ -1061,7 +1091,15 @@ function loadScoreTable(subKey,subject,cls,allStudents){
           h+="<td style='text-align:center'><span class='score-chip "+chipCls+"'>"+total+"/"+maxTotal+" ("+pct+"%)</span></td></tr>";
         });
         h+="</tbody></table></div></div>";
-        h+="<div style='margin-top:.75rem;display:flex;gap:.5rem'>";
+        // Summary bar
+        var totalNotSub=students.filter(function(s){
+          return assignments.some(function(asn){var sc=(scores[s.id]||{})[asn.id];return sc===undefined||sc===null||sc==="";});
+        }).length;
+        if(totalNotSub>0){
+          h+="<div style='margin-top:.75rem;padding:.6rem 1rem;background:rgba(229,62,62,.08);border:1.5px solid rgba(229,62,62,.25);border-radius:var(--radius);font-size:13px;color:var(--red-600);font-weight:600'>"+
+            "<i class='ti ti-alert-circle'></i> มีนักเรียนที่ยังไม่ส่งงานครบ "+totalNotSub+" คน</div>";
+        }
+        h+="<div style='margin-top:.5rem;display:flex;gap:.5rem'>";
         h+="<button class='btn btn-green btn-sm' id='btnSaveScores'><i class='ti ti-device-floppy'></i> บันทึกคะแนน</button>";
         h+="</div>";
       }
@@ -1108,6 +1146,22 @@ function loadScoreTable(subKey,subject,cls,allStudents){
             db.ref(asnPath+"/"+asn.id).remove()
             .then(function(){toast("success","ลบงานสำเร็จ");loadScoreTable(subKey,subject,cls,allStudents);})
             .catch(function(e){toast("error","เกิดข้อผิดพลาด",e.message);});
+          });
+        });
+      });
+
+      // Live border color on input change
+      students.forEach(function(s,idx){
+        assignments.forEach(function(asn,ai){
+          var inp=G("sc_"+idx+"_"+ai); if(!inp)return;
+          inp.addEventListener("input",function(){
+            if(this.value.trim()===""){
+              this.style.background="rgba(229,62,62,.10)";
+              this.style.borderColor="rgba(229,62,62,.5)";
+            } else {
+              this.style.background="#fff";
+              this.style.borderColor="var(--green-600)";
+            }
           });
         });
       });
