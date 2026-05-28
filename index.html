@@ -725,18 +725,36 @@ function renderClassAtt(){
 }
 
 function renderClassAttUI(subjects,allStudents,classes){
-  var subKeys=Object.keys(subjects);
+  var subKeys=Object.keys(subjects).sort();
   var h="<div class='container'>";
   h+="<div class='section-header'>";
   h+="<div><h2 style='margin:0'>เช็คชื่อรายวิชา</h2><div class='text-muted'>บันทึกเวลาเรียนตามคาบ</div></div>";
   h+="<button class='btn btn-blue' id='btnAddSubject'><i class='ti ti-plus'></i> เพิ่มวิชา</button></div>";
 
-  // Selectors
+  // Subject list with edit/delete
+  if(subKeys.length>0){
+    h+="<div class='card' style='margin-bottom:1rem;padding:0'>";
+    h+="<div style='padding:.65rem 1rem;font-weight:600;color:var(--blue-800);border-bottom:1.5px solid var(--blue-100);font-size:13px;display:flex;align-items:center;gap:6px'><i class='ti ti-books'></i> รายวิชาทั้งหมด ("+subKeys.length+" วิชา)</div>";
+    h+="<div class='table-wrap'><table><thead><tr><th>รหัสวิชา</th><th>ชื่อวิชา</th><th style='text-align:right'>จัดการ</th></tr></thead><tbody>";
+    subKeys.forEach(function(sk,i){
+      var subj=subjects[sk];
+      h+="<tr><td><span class='badge badge-blue'>"+escH(subj.code||sk)+"</span></td>";
+      h+="<td style='font-weight:500'>"+escH(subj.name)+"</td>";
+      h+="<td><div class='td-actions'>";
+      h+="<button class='btn btn-sm btn-yellow' id='editSub_"+i+"'><i class='ti ti-edit'></i> แก้ไข</button>";
+      h+="<button class='btn btn-sm' style='color:var(--red-600);border-color:var(--red-100)' id='delSub_"+i+"'><i class='ti ti-trash'></i></button>";
+      h+="</div></td></tr>";
+    });
+    h+="</tbody></table></div></div>";
+  }
+
+  // Selectors — รหัสวิชาก่อน ห้อง วันที่ คาบ
   h+="<div class='card' style='margin-bottom:1rem'>";
+  h+="<div style='font-weight:600;font-size:13px;color:var(--blue-800);margin-bottom:.75rem'><i class='ti ti-check'></i> เช็คชื่อ</div>";
   h+="<div class='select-row'>";
-  h+="<div class='sg'><label><i class='ti ti-book'></i> วิชา</label>";
-  h+="<select id='caSelSub'><option value=''>-- เลือกวิชา --</option>";
-  subKeys.forEach(function(sk){h+="<option value='"+sk+"'>"+escH(subjects[sk].name)+"</option>";});
+  h+="<div class='sg'><label><i class='ti ti-hash'></i> รหัสวิชา</label>";
+  h+="<select id='caSelSub'><option value=''>-- เลือกรหัสวิชา --</option>";
+  subKeys.forEach(function(sk){h+="<option value='"+sk+"'>["+escH(subjects[sk].code||sk)+"] "+escH(subjects[sk].name)+"</option>";});
   h+="</select></div>";
   h+="<div class='sg'><label><i class='ti ti-door'></i> ห้องเรียน</label>";
   h+="<select id='caSelCls'><option value=''>-- เลือกห้อง --</option>";
@@ -749,17 +767,33 @@ function renderClassAttUI(subjects,allStudents,classes){
   h+="<button class='btn btn-blue' id='btnLoadCA' style='flex-shrink:0'><i class='ti ti-search'></i> โหลด</button>";
   h+="</div></div>";
 
-  h+="<div id='caTableArea'><div class='empty' style='padding:2rem'><i class='ti ti-arrow-up' style='font-size:24px;color:var(--gray-400)'></i><br>เลือกวิชา ห้อง และกดโหลด</div></div>";
+  h+="<div id='caTableArea'><div class='empty' style='padding:2rem'><i class='ti ti-arrow-up' style='font-size:24px;color:var(--gray-400)'></i><br>เลือกรหัสวิชา ห้อง และกดโหลด</div></div>";
   h+="</div>";
   showPage(h);
 
   G("btnAddSubject").addEventListener("click",function(){openAddSubject(subjects,allStudents,classes);});
   G("btnLoadCA").addEventListener("click",function(){
     var sk=G("caSelSub").value,cls=G("caSelCls").value,dt=G("caDate").value,per=G("caPeriod").value;
-    if(!sk){toast("warning","กรุณาเลือกวิชา");return;}
+    if(!sk){toast("warning","กรุณาเลือกรหัสวิชา");return;}
     if(!cls){toast("warning","กรุณาเลือกห้องเรียน");return;}
     if(!dt){toast("warning","กรุณาเลือกวันที่");return;}
     loadClassAttTable(sk,subjects[sk],cls,allStudents,dt,parseInt(per)||1);
+  });
+
+  // Edit / Delete subject
+  subKeys.forEach(function(sk,i){
+    var eb=G("editSub_"+i);
+    if(eb) eb.addEventListener("click",function(){openEditSubject(sk,subjects[sk],allStudents,classes);});
+    var db2=G("delSub_"+i);
+    if(db2) db2.addEventListener("click",function(){
+      Swal.fire({icon:"warning",title:"ลบวิชา",
+        html:"ลบ <strong>"+escH(subjects[sk].name)+"</strong>?<br><small style='color:var(--gray-400)'>ข้อมูลเช็คชื่อ/คะแนนจะยังอยู่ในฐานข้อมูล</small>",
+        confirmButtonText:"ลบวิชา",confirmButtonColor:"#e53e3e",showCancelButton:true,cancelButtonText:"ยกเลิก"
+      }).then(function(r2){
+        if(!r2.isConfirmed)return;
+        db.ref("subjects/"+sk).remove().then(function(){toast("success","ลบวิชาสำเร็จ");renderClassAtt();});
+      });
+    });
   });
 }
 
@@ -821,17 +855,19 @@ function loadClassAttTable(subKey,subject,cls,allStudents,dateKey,period){
 }
 
 function openAddSubject(subjects,allStudents,classes){
+  var inp="<div style='text-align:left'>"+
+    "<div style='margin-bottom:.75rem'><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'><i class='ti ti-hash'></i> รหัสวิชา</label>"+
+    "<input id='sbjCode' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px' placeholder='เช่น THAI01, MATH02'></div>"+
+    "<div><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'><i class='ti ti-book'></i> ชื่อวิชา</label>"+
+    "<input id='sbjName' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px' placeholder='เช่น ภาษาไทย, คณิตศาสตร์'></div>"+
+    "</div>";
   Swal.fire({
-    title:"เพิ่มวิชา",
-    html:"<div style='text-align:left'>"+
-      "<div class='form-group'><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'>ชื่อวิชา</label><input id='sbjName' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px' placeholder='เช่น ภาษาไทย, คณิตศาสตร์'></div>"+
-      "<div class='form-group'><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'>รหัสวิชา (ย่อ)</label><input id='sbjCode' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px' placeholder='เช่น THAI, MATH'></div>"+
-      "</div>",
+    title:"เพิ่มวิชา",html:inp,
     confirmButtonText:"เพิ่มวิชา",confirmButtonColor:"#2980b9",showCancelButton:true,cancelButtonText:"ยกเลิก",
     preConfirm:function(){
-      var n=document.getElementById("sbjName").value.trim();
       var c=document.getElementById("sbjCode").value.trim();
-      if(!n||!c){Swal.showValidationMessage("กรุณากรอกข้อมูลให้ครบ");return false;}
+      var n=document.getElementById("sbjName").value.trim();
+      if(!c||!n){Swal.showValidationMessage("กรุณากรอกข้อมูลให้ครบ");return false;}
       return {name:n,code:c};
     }
   }).then(function(r){
@@ -839,6 +875,30 @@ function openAddSubject(subjects,allStudents,classes){
     var key=safeKey(r.value.code.toUpperCase());
     db.ref("subjects/"+key).set({name:r.value.name,code:r.value.code,createdBy:APP.displayName})
     .then(function(){toast("success","เพิ่มวิชาสำเร็จ",r.value.name);renderClassAtt();})
+    .catch(function(e){toast("error","เกิดข้อผิดพลาด",e.message);});
+  });
+}
+
+// แก้ไขวิชา
+function openEditSubject(sk,subj,allStudents,classes){
+  var inp="<div style='text-align:left'>"+
+    "<div style='margin-bottom:.75rem'><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'><i class='ti ti-hash'></i> รหัสวิชา (ไม่สามารถเปลี่ยน key ได้)</label>"+
+    "<input id='editCode' value='"+escH(subj.code||sk)+"' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:10px;font-size:14px;background:var(--gray-100);color:var(--gray-400)' readonly></div>"+
+    "<div><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'><i class='ti ti-book'></i> ชื่อวิชา</label>"+
+    "<input id='editName' value='"+escH(subj.name)+"' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px'></div>"+
+    "</div>";
+  Swal.fire({
+    title:"แก้ไขวิชา",html:inp,
+    confirmButtonText:"บันทึก",confirmButtonColor:"#2980b9",showCancelButton:true,cancelButtonText:"ยกเลิก",
+    preConfirm:function(){
+      var n=document.getElementById("editName").value.trim();
+      if(!n){Swal.showValidationMessage("กรุณากรอกชื่อวิชา");return false;}
+      return n;
+    }
+  }).then(function(r){
+    if(!r.isConfirmed)return;
+    db.ref("subjects/"+sk+"/name").set(r.value)
+    .then(function(){toast("success","แก้ไขชื่อวิชาสำเร็จ");renderClassAtt();})
     .catch(function(e){toast("error","เกิดข้อผิดพลาด",e.message);});
   });
 }
@@ -861,17 +921,17 @@ function renderScores(){
 }
 
 function renderScoresUI(subjects,allStudents,classes){
-  var subKeys=Object.keys(subjects);
+  var subKeys=Object.keys(subjects).sort();
   var h="<div class='container'>";
   h+="<div class='section-header'>";
-  h+="<div><h2 style='margin:0'>คะแนนเก็บ</h2><div class='text-muted'>บันทึกและดูคะแนนรายวิชา</div></div>";
-  h+="<button class='btn btn-purple' id='btnAddAssign'><i class='ti ti-plus'></i> เพิ่มงาน/กิจกรรม</button></div>";
+  h+="<div><h2 style='margin:0'>คะแนนเก็บ</h2><div class='text-muted'>บันทึกและดูคะแนนรายวิชา</div></div></div>";
 
+  // Select row — รหัสวิชาก่อน
   h+="<div class='card' style='margin-bottom:1rem'>";
   h+="<div class='select-row'>";
-  h+="<div class='sg'><label><i class='ti ti-book'></i> วิชา</label>";
-  h+="<select id='scSelSub'><option value=''>-- เลือกวิชา --</option>";
-  subKeys.forEach(function(sk){h+="<option value='"+sk+"'>"+escH(subjects[sk].name)+"</option>";});
+  h+="<div class='sg'><label><i class='ti ti-hash'></i> รหัสวิชา</label>";
+  h+="<select id='scSelSub'><option value=''>-- เลือกรหัสวิชา --</option>";
+  subKeys.forEach(function(sk){h+="<option value='"+sk+"'>["+escH(subjects[sk].code||sk)+"] "+escH(subjects[sk].name)+"</option>";});
   h+="</select></div>";
   h+="<div class='sg'><label><i class='ti ti-door'></i> ห้องเรียน</label>";
   h+="<select id='scSelCls'><option value=''>-- เลือกห้อง --</option>";
@@ -879,78 +939,142 @@ function renderScoresUI(subjects,allStudents,classes){
   h+="</select></div>";
   h+="<button class='btn btn-blue' id='btnLoadSc' style='flex-shrink:0'><i class='ti ti-search'></i> โหลด</button>";
   h+="</div></div>";
-  h+="<div id='scArea'><div class='empty' style='padding:2rem'>เลือกวิชาและห้องแล้วกดโหลด</div></div>";
+  h+="<div id='scArea'><div class='empty' style='padding:2rem'>เลือกรหัสวิชาและห้อง แล้วกดโหลด</div></div>";
   h+="</div>";
   showPage(h);
 
-  G("btnAddAssign").addEventListener("click",function(){openAddAssignment(subjects,allStudents,classes);});
   G("btnLoadSc").addEventListener("click",function(){
     var sk=G("scSelSub").value, cls=G("scSelCls").value;
-    if(!sk){toast("warning","กรุณาเลือกวิชา");return;}
+    if(!sk){toast("warning","กรุณาเลือกรหัสวิชา");return;}
     if(!cls){toast("warning","กรุณาเลือกห้องเรียน");return;}
     loadScoreTable(sk,subjects[sk],cls,allStudents);
+  });
+  // onChange ให้โหลดใหม่อัตโนมัติ
+  ["scSelSub","scSelCls"].forEach(function(id){
+    var el=G(id); if(el) el.addEventListener("change",function(){
+      var sk=G("scSelSub").value, cls=G("scSelCls").value;
+      if(sk&&cls) loadScoreTable(sk,subjects[sk],cls,allStudents);
+    });
   });
 }
 
 function loadScoreTable(subKey,subject,cls,allStudents){
   var students=allStudents.filter(function(s){return s.class===cls;}).sort(function(a,b){return Number(a.no)-Number(b.no);});
-  // Load assignments for this subject
-  db.ref("assignments/"+subKey).once("value").then(function(asnSnap){
+  // path: assignments/{subKey}/{clsKey}/{asnId}  (per-class)
+  var asnPath="assignments/"+subKey+"/"+safeKey(cls);
+  db.ref(asnPath).once("value").then(function(asnSnap){
     var assignments=[];
-    if(asnSnap.exists()) asnSnap.forEach(function(c){assignments.push({id:c.key,...c.val()});});
+    if(asnSnap.exists()) asnSnap.forEach(function(c){var v=c.val();assignments.push({id:c.key,name:v.name,maxScore:v.maxScore,order:v.order||0});});
     assignments.sort(function(a,b){return (a.order||0)-(b.order||0)||(a.name||"").localeCompare(b.name||"");});
-    // Load scores
     db.ref("scores/"+subKey+"/"+safeKey(cls)).once("value").then(function(scSnap){
       var scores={};
       if(scSnap.exists()) scSnap.forEach(function(sid){scores[sid.key]={};sid.forEach(function(asn){scores[sid.key][asn.key]=asn.val();});});
 
-      var h="<div class='info-banner'><strong>"+escH(subject.name)+"</strong> | ห้อง "+escH(cls)+" | "+assignments.length+" งาน</div>";
-      if(!assignments.length){
-        h+="<div class='card'><div class='empty'>ยังไม่มีงาน/กิจกรรมสำหรับวิชานี้<br><span class='text-muted'>กดปุ่ม เพิ่มงาน/กิจกรรม ด้านบน</span></div></div>";
-        G("scArea").innerHTML=h; return;
+      var h="<div class='info-banner' style='display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem'>";
+      h+="<span><strong>"+escH(subject.name)+"</strong> | ห้อง "+escH(cls)+" | "+assignments.length+" งาน</span>";
+      h+="<button class='btn btn-purple btn-sm' id='btnAddAsnHere'><i class='ti ti-plus'></i> เพิ่มงาน</button></div>";
+
+      // Assignment management table
+      if(assignments.length>0){
+        h+="<div class='card' style='margin-bottom:.75rem;padding:0'>";
+        h+="<div style='padding:.6rem 1rem;font-size:12px;font-weight:600;color:var(--purple-600);border-bottom:1.5px solid var(--blue-100);display:flex;align-items:center;gap:6px'><i class='ti ti-list-check'></i> รายการงาน/กิจกรรม (ห้อง "+escH(cls)+")</div>";
+        h+="<div class='table-wrap'><table><thead><tr><th>ชื่องาน/กิจกรรม</th><th style='text-align:center'>คะแนนเต็ม</th><th style='text-align:right'>จัดการ</th></tr></thead><tbody>";
+        assignments.forEach(function(asn,ai){
+          h+="<tr><td style='font-weight:500'>"+escH(asn.name)+"</td><td style='text-align:center'>"+asn.maxScore+"</td>";
+          h+="<td><div class='td-actions'>";
+          h+="<button class='btn btn-sm btn-yellow' id='editAsn_"+ai+"'><i class='ti ti-edit'></i> แก้ไข</button>";
+          h+="<button class='btn btn-sm' style='color:var(--red-600);border-color:var(--red-100)' id='delAsn_"+ai+"'><i class='ti ti-trash'></i></button>";
+          h+="</div></td></tr>";
+        });
+        h+="</tbody></table></div></div>";
       }
 
-      h+="<div class='card' style='padding:0'><div class='table-wrap'><table id='scTbl'>";
-      h+="<thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th>";
-      assignments.forEach(function(asn){
-        h+="<th style='text-align:center;white-space:nowrap'><div>"+escH(asn.name)+"</div><div style='font-weight:400;font-size:11px;color:var(--gray-400)'>เต็ม "+asn.maxScore+"</div></th>";
-      });
-      h+="<th style='text-align:center'>รวม</th></tr></thead><tbody>";
-      students.forEach(function(s,idx){
-        var total=0,maxTotal=0;
-        h+="<tr><td>"+s.no+"</td><td style='font-weight:500'>"+escH(s.name)+"</td>";
-        assignments.forEach(function(asn,ai){
-          var sc=(scores[s.id]||{})[asn.id];
-          maxTotal+=Number(asn.maxScore||0);
-          if(sc!==undefined&&sc!==null&&sc!==""){total+=Number(sc);}
-          var displayed=sc===undefined||sc===null||sc===""?"":sc;
-          h+="<td style='text-align:center;padding:4px 8px'>";
-          h+="<input type='number' id='sc_"+idx+"_"+ai+"' data-sid='"+s.id+"' data-asn='"+asn.id+"' data-max='"+asn.maxScore+"' value='"+displayed+"' min='0' max='"+asn.maxScore+"' style='width:60px;padding:4px 6px;text-align:center;font-size:13px;border:1.5px solid var(--gray-200)'>";
-          h+="</td>";
+      // Score table
+      if(!assignments.length){
+        h+="<div class='card'><div class='empty'>ยังไม่มีงาน/กิจกรรมสำหรับห้องนี้<br><span class='text-muted'>กดปุ่ม เพิ่มงาน ด้านบน</span></div></div>";
+      } else {
+        h+="<div class='card' style='padding:0'><div class='table-wrap'><table id='scTbl'>";
+        h+="<thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th>";
+        assignments.forEach(function(asn){
+          h+="<th style='text-align:center;white-space:nowrap'><div>"+escH(asn.name)+"</div><div style='font-weight:400;font-size:11px;color:var(--gray-400)'>เต็ม "+asn.maxScore+"</div></th>";
         });
-        var pct=maxTotal>0?Math.round((total/maxTotal)*100):0;
-        var chipCls=pct>=80?"score-good":pct>=60?"score-warn":"score-bad";
-        h+="<td style='text-align:center'><span class='score-chip "+chipCls+"'>"+total+"/"+maxTotal+" ("+pct+"%)</span></td></tr>";
-      });
-      h+="</tbody></table></div></div>";
-      h+="<div style='margin-top:.75rem;display:flex;gap:.5rem'>";
-      h+="<button class='btn btn-green btn-sm' id='btnSaveScores'><i class='ti ti-device-floppy'></i> บันทึกคะแนน</button>";
-      h+="</div>";
+        h+="<th style='text-align:center'>รวม</th></tr></thead><tbody>";
+        students.forEach(function(s,idx){
+          var total=0,maxTotal=0;
+          h+="<tr><td>"+s.no+"</td><td style='font-weight:500'>"+escH(s.name)+"</td>";
+          assignments.forEach(function(asn,ai){
+            var sc=(scores[s.id]||{})[asn.id];
+            maxTotal+=Number(asn.maxScore||0);
+            if(sc!==undefined&&sc!==null&&sc!==""){total+=Number(sc);}
+            var displayed=sc===undefined||sc===null||sc===""?"":sc;
+            h+="<td style='text-align:center;padding:4px 8px'>";
+            h+="<input type='number' id='sc_"+idx+"_"+ai+"' value='"+displayed+"' min='0' max='"+asn.maxScore+"' style='width:60px;padding:4px 6px;text-align:center;font-size:13px;border:1.5px solid var(--gray-200);border-radius:6px'>";
+            h+="</td>";
+          });
+          var pct=maxTotal>0?Math.round((total/maxTotal)*100):0;
+          var chipCls=pct>=80?"score-good":pct>=60?"score-warn":"score-bad";
+          h+="<td style='text-align:center'><span class='score-chip "+chipCls+"'>"+total+"/"+maxTotal+" ("+pct+"%)</span></td></tr>";
+        });
+        h+="</tbody></table></div></div>";
+        h+="<div style='margin-top:.75rem;display:flex;gap:.5rem'>";
+        h+="<button class='btn btn-green btn-sm' id='btnSaveScores'><i class='ti ti-device-floppy'></i> บันทึกคะแนน</button>";
+        h+="</div>";
+      }
       G("scArea").innerHTML=h;
 
-      G("btnSaveScores").addEventListener("click",function(){
+      // Add assignment
+      G("btnAddAsnHere").addEventListener("click",function(){
+        openAddAssignmentForClass(subKey,subject,cls,allStudents,asnPath);
+      });
+
+      // Edit/Delete assignment
+      assignments.forEach(function(asn,ai){
+        var eb=G("editAsn_"+ai);
+        if(eb) eb.addEventListener("click",function(){
+          Swal.fire({
+            title:"แก้ไขงาน/กิจกรรม",
+            html:"<div style='text-align:left'>"+
+              "<div style='margin-bottom:.75rem'><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'>ชื่องาน</label>"+
+              "<input id='eanName' value='"+escH(asn.name)+"' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px'></div>"+
+              "<div><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'>คะแนนเต็ม</label>"+
+              "<input id='eanMax' type='number' value='"+asn.maxScore+"' min='1' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px'></div>"+
+              "</div>",
+            confirmButtonText:"บันทึก",confirmButtonColor:"#2980b9",showCancelButton:true,cancelButtonText:"ยกเลิก",
+            preConfirm:function(){
+              var n=document.getElementById("eanName").value.trim();
+              var mx=parseInt(document.getElementById("eanMax").value)||asn.maxScore;
+              if(!n){Swal.showValidationMessage("กรุณากรอกชื่องาน");return false;}
+              return {name:n,maxScore:mx};
+            }
+          }).then(function(r2){
+            if(!r2.isConfirmed)return;
+            db.ref(asnPath+"/"+asn.id).update({name:r2.value.name,maxScore:r2.value.maxScore})
+            .then(function(){toast("success","แก้ไขงานสำเร็จ");loadScoreTable(subKey,subject,cls,allStudents);})
+            .catch(function(e){toast("error","เกิดข้อผิดพลาด",e.message);});
+          });
+        });
+        var db2=G("delAsn_"+ai);
+        if(db2) db2.addEventListener("click",function(){
+          Swal.fire({icon:"warning",title:"ลบงาน",
+            html:"ลบ <strong>"+escH(asn.name)+"</strong>?<br><small style='color:var(--gray-400)'>คะแนนที่บันทึกไว้จะยังอยู่ในฐานข้อมูล</small>",
+            confirmButtonText:"ลบ",confirmButtonColor:"#e53e3e",showCancelButton:true,cancelButtonText:"ยกเลิก"
+          }).then(function(r2){
+            if(!r2.isConfirmed)return;
+            db.ref(asnPath+"/"+asn.id).remove()
+            .then(function(){toast("success","ลบงานสำเร็จ");loadScoreTable(subKey,subject,cls,allStudents);})
+            .catch(function(e){toast("error","เกิดข้อผิดพลาด",e.message);});
+          });
+        });
+      });
+
+      // Save scores
+      if(G("btnSaveScores")) G("btnSaveScores").addEventListener("click",function(){
         var updates={};
         students.forEach(function(s,idx){
           assignments.forEach(function(asn,ai){
-            var inp=G("sc_"+idx+"_"+ai);
-            if(!inp)return;
+            var inp=G("sc_"+idx+"_"+ai); if(!inp)return;
             var val=inp.value.trim();
-            if(val===""){
-              updates["scores/"+subKey+"/"+safeKey(cls)+"/"+s.id+"/"+asn.id]=null;
-            } else {
-              var num=parseFloat(val);
-              updates["scores/"+subKey+"/"+safeKey(cls)+"/"+s.id+"/"+asn.id]=isNaN(num)?0:num;
-            }
+            updates["scores/"+subKey+"/"+safeKey(cls)+"/"+s.id+"/"+asn.id]=val===""?null:(parseFloat(val)||0);
           });
         });
         db.ref().update(updates).then(function(){
@@ -962,35 +1086,35 @@ function loadScoreTable(subKey,subject,cls,allStudents){
   });
 }
 
-function openAddAssignment(subjects,allStudents,classes){
-  var subKeys=Object.keys(subjects);
-  if(!subKeys.length){toast("warning","กรุณาเพิ่มวิชาก่อน");return;}
-  var curSub=G("scSelSub")&&G("scSelSub").value?G("scSelSub").value:"";
+// เพิ่มงานสำหรับห้องที่เลือกเท่านั้น
+function openAddAssignmentForClass(subKey,subject,cls,allStudents,asnPath){
   Swal.fire({
     title:"เพิ่มงาน/กิจกรรม",
     html:"<div style='text-align:left'>"+
-      "<div class='form-group' style='margin-bottom:.75rem'><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'>วิชา</label>"+
-      "<select id='asnSub' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px'>"+
-      subKeys.map(function(sk){return "<option value='"+sk+"'"+(sk===curSub?" selected":"")+">"+escH(subjects[sk].name)+"</option>";}).join("")+
-      "</select></div>"+
-      "<div class='form-group' style='margin-bottom:.75rem'><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'>ชื่องาน/กิจกรรม</label><input id='asnName' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px' placeholder='เช่น แบบฝึกหัดบทที่ 1'></div>"+
-      "<div class='form-group' style='margin-bottom:.75rem'><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'>คะแนนเต็ม</label><input id='asnMax' type='number' value='10' min='1' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px'></div>"+
+      "<div style='margin-bottom:4px;font-size:13px;color:var(--blue-600);font-weight:600;background:var(--blue-50);border-radius:8px;padding:.5rem .75rem'><i class='ti ti-door'></i> เพิ่มเฉพาะห้อง: <strong>"+escH(cls)+"</strong> | วิชา: <strong>"+escH(subject.name)+"</strong></div>"+
+      "<div style='margin-top:.75rem;margin-bottom:.75rem'><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'>ชื่องาน/กิจกรรม</label>"+
+      "<input id='asnName' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px' placeholder='เช่น แบบฝึกหัดบทที่ 1'></div>"+
+      "<div><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'>คะแนนเต็ม</label>"+
+      "<input id='asnMax' type='number' value='10' min='1' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px'></div>"+
       "</div>",
     confirmButtonText:"เพิ่มงาน",confirmButtonColor:"#7c3aed",showCancelButton:true,cancelButtonText:"ยกเลิก",
     preConfirm:function(){
-      var sub=document.getElementById("asnSub").value;
       var n=document.getElementById("asnName").value.trim();
       var mx=parseInt(document.getElementById("asnMax").value)||10;
       if(!n){Swal.showValidationMessage("กรุณากรอกชื่องาน");return false;}
-      return {sub:sub,name:n,maxScore:mx};
+      return {name:n,maxScore:mx};
     }
   }).then(function(r){
     if(!r.isConfirmed)return;
-    var ref=db.ref("assignments/"+r.value.sub).push();
-    ref.set({name:r.value.name,maxScore:r.value.maxScore,order:Date.now(),createdBy:APP.displayName})
-    .then(function(){toast("success","เพิ่มงานสำเร็จ",r.value.name);renderScores();})
+    db.ref(asnPath).push({name:r.value.name,maxScore:r.value.maxScore,order:Date.now(),createdBy:APP.displayName})
+    .then(function(){toast("success","เพิ่มงานสำเร็จ");loadScoreTable(subKey,subject,cls,allStudents);})
     .catch(function(e){toast("error","เกิดข้อผิดพลาด",e.message);});
   });
+}
+
+// legacy stub (ไม่ใช้แล้ว แต่เก็บไว้ไม่ให้ error ถ้ายังมีที่อ้างถึง)
+function openAddAssignment(subjects,allStudents,classes){
+  toast("warning","กรุณาเลือกวิชาและห้องก่อน แล้วกดโหลด จากนั้นใช้ปุ่ม เพิ่มงาน");
 }
 
 // ══════════════════════════════════════════════════
@@ -1011,7 +1135,7 @@ function renderStudentPortal(){
     var subjects={};
     if(res[0].exists()) res[0].forEach(function(c){subjects[c.key]=c.val();});
     var allAssignments={};
-    if(res[1].exists()) res[1].forEach(function(subK){allAssignments[subK.key]={};subK.forEach(function(a){allAssignments[subK.key][a.key]=a.val();});});
+    if(res[1].exists()) res[1].forEach(function(subK){allAssignments[subK.key]={};subK.forEach(function(clsK){allAssignments[subK.key][clsK.key]={};clsK.forEach(function(a){allAssignments[subK.key][clsK.key][a.key]=a.val();});});});
     var myScores={};
     if(res[2].exists()) res[2].forEach(function(subK){
       myScores[subK.key]={};
@@ -1064,7 +1188,7 @@ function renderStudentPortal(){
     h+="<div class='portal-section'><h3><i class='ti ti-star'></i> คะแนนเก็บ</h3>";
     var hasScore=false;
     subKeys.forEach(function(sk){
-      var subj=subjects[sk];var asnMap=allAssignments[sk]||{};var asnKeys=Object.keys(asnMap);
+      var subj=subjects[sk];var asnMap=(allAssignments[sk]||{})[clsKey]||{};var asnKeys=Object.keys(asnMap);
       if(!asnKeys.length)return;hasScore=true;
       var myS=myScores[sk]||{};var total=0,maxTotal=0,submitted=0;
       h+="<div style='border:1.5px solid var(--blue-100);border-radius:var(--radius);padding:.75rem;margin-bottom:.75rem'>";
@@ -1114,7 +1238,7 @@ function renderReport(){
     var allStudents=[];
     if(res[4].exists()) res[4].forEach(function(c){var d=c.val();allStudents.push({id:c.key,no:d.no,name:d.name,class:d.class});});
     var allAssignments={};
-    if(res[5].exists()) res[5].forEach(function(subK){allAssignments[subK.key]={};subK.forEach(function(a){allAssignments[subK.key][a.key]=a.val();});});
+    if(res[5].exists()) res[5].forEach(function(subK){allAssignments[subK.key]={};subK.forEach(function(clsK){allAssignments[subK.key][clsK.key]={};clsK.forEach(function(a){allAssignments[subK.key][clsK.key][a.key]=a.val();});});});
     var allScores={};
     if(res[6].exists()) res[6].forEach(function(subK){allScores[subK.key]={};subK.forEach(function(clsK){allScores[subK.key][clsK.key]={};clsK.forEach(function(stuK){allScores[subK.key][clsK.key][stuK.key]={};stuK.forEach(function(a){allScores[subK.key][clsK.key][stuK.key][a.key]=a.val();});});});});
     var allClassAtt={};
@@ -1297,17 +1421,17 @@ function doExportScorePDF(){
     w.document.write("<div style='padding:12px 20px'>");
     selSubKeys.forEach(function(sk){
       var subj=d.subjects[sk];
-      var asnMap=d.allAssignments[sk]||{};
-      var asnKeys=Object.keys(asnMap);
-      asnKeys.sort(function(a,b){return (asnMap[a].order||0)-(asnMap[b].order||0)||(asnMap[a].name||"").localeCompare(asnMap[b].name||"");});
-      w.document.write("<div class='section-title'>วิชา: "+subj.name+(asnKeys.length?" | "+asnKeys.length+" งาน":"")+"</div>");
-      if(!asnKeys.length){w.document.write("<p style='color:#94a3b8;font-size:11px;margin-bottom:8px'>ยังไม่มีงานสำหรับวิชานี้</p>");return;}
+      w.document.write("<div class='section-title'>วิชา: "+subj.name+"</div>");
       selClasses.forEach(function(cls){
         var clsKey=safeKey(cls);
+        var asnMap=(d.allAssignments[sk]||{})[clsKey]||{};
+        var asnKeys=Object.keys(asnMap);
+        asnKeys.sort(function(a,b){return (asnMap[a].order||0)-(asnMap[b].order||0)||(asnMap[a].name||"").localeCompare(asnMap[b].name||"");});
         var students=d.allStudents.filter(function(s){return s.class===cls;}).sort(function(a,b){return Number(a.no)-Number(b.no);});
         if(!students.length)return;
         var scCls=(d.allScores[sk]||{})[clsKey]||{};
-        w.document.write("<div style='font-size:12px;font-weight:700;color:#475569;margin:8px 0 4px'>ห้อง "+cls+"</div>");
+        w.document.write("<div style='font-size:12px;font-weight:700;color:#475569;margin:8px 0 4px'>ห้อง "+cls+" | "+asnKeys.length+" งาน</div>");
+        if(!asnKeys.length){w.document.write("<p style='color:#94a3b8;font-size:11px;margin-bottom:8px'>ยังไม่มีงานสำหรับห้องนี้</p>");return;}
         w.document.write("<table><thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th>");
         asnKeys.forEach(function(ak){w.document.write("<th style='text-align:center;font-size:10px'>"+escH(asnMap[ak].name||ak)+"<br>/"+asnMap[ak].maxScore+"</th>");});
         w.document.write("<th style='text-align:center'>รวม</th><th style='text-align:center'>%</th></tr></thead><tbody>");
