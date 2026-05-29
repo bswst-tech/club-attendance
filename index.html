@@ -359,9 +359,9 @@ function startApp(){
     if(mc.length===0){
       showPage("<div class='container'><div class='empty'>ไม่พบชุมนุมที่ท่านรับผิดชอบ</div></div>");
     } else if(mc.length===1){
-      APP.clubId=mc[0]; navGo("attendance");
+      APP.clubId=mc[0]; navGo("classatt");
     } else {
-      pickClubFirst();
+      navGo("classatt");
     }
   }
 }
@@ -372,11 +372,12 @@ function buildNav(){
     tabs=[["myportal","ข้อมูลของฉัน","ti-user-circle"]];
   } else if(APP.isAdmin){
     tabs=[["clubs","ชุมนุม","ti-users"],["students","รายชื่อนักเรียน","ti-address-book"],
-          ["attendance","เช็คชื่อชุมนุม","ti-check"],["classatt","เช็คชื่อรายวิชา","ti-calendar-check"],
-          ["scores","คะแนนเก็บ","ti-star"],["report","รายงาน","ti-chart-bar"]];
+          ["classatt","เช็คชื่อรายวิชา","ti-calendar-check"],["scores","คะแนนเก็บ","ti-star"],
+          ["attendance","เช็คชื่อชุมนุม","ti-check"],["members","สมาชิก","ti-user-plus"],
+          ["report","รายงาน","ti-chart-bar"]];
   } else {
-    tabs=[["attendance","เช็คชื่อชุมนุม","ti-check"],["classatt","เช็คชื่อรายวิชา","ti-calendar-check"],
-          ["scores","คะแนนเก็บ","ti-star"],["members","สมาชิก","ti-user-plus"],
+    tabs=[["classatt","เช็คชื่อรายวิชา","ti-calendar-check"],["scores","คะแนนเก็บ","ti-star"],
+          ["attendance","เช็คชื่อชุมนุม","ti-check"],["members","สมาชิก","ti-user-plus"],
           ["report","รายงาน","ti-chart-bar"]];
   }
   G("mainNav").innerHTML=tabs.map(function(t,i){
