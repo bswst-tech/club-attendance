@@ -711,7 +711,13 @@ function renderClassAtt(){
   showPage("<div class='container'><div class='loading'>กำลังโหลด...</div></div>");
   Promise.all([db.ref("subjects").once("value"),db.ref("students").once("value")]).then(function(res){
     var subjects={};
-    if(res[0].exists()) res[0].forEach(function(c){subjects[c.key]=c.val();});
+    if(res[0].exists()) res[0].forEach(function(c){
+      var d=c.val();
+      // admin เห็นทุกวิชา, ครูเห็นเฉพาะวิชาของตัวเอง
+      if(APP.isAdmin || d.createdBy===APP.displayName){
+        subjects[c.key]=d;
+      }
+    });
     var allStudents=[];
     if(res[1].exists()) res[1].forEach(function(c){var d=c.val();allStudents.push({id:c.key,no:d.no,name:d.name,class:d.class});});
     var allClasses=[]; var seen={};
@@ -737,7 +743,7 @@ function renderClassAttUI(subjects,allStudents,allClasses){
       var subj=subjects[sk];
       var subjClasses=subj.classes?Object.values(subj.classes):[];
       h+="<tr><td><span class='badge badge-blue'>"+escH(subj.code||sk)+"</span></td>";
-      h+="<td style='font-weight:500'>"+escH(subj.name)+"</td>";
+      h+="<td style='font-weight:500'>"+escH(subj.name)+"<br><small style='color:var(--gray-400);font-size:11px'>"+escH(subj.createdBy||"")+"</small></td>";
       h+="<td><div style='display:flex;gap:4px;flex-wrap:wrap'>";
       if(subjClasses.length) subjClasses.forEach(function(c){h+="<span class='badge badge-teal' style='font-size:11px'>"+escH(c)+"</span>";});
       else h+="<span class='badge badge-gray' style='font-size:11px'>ยังไม่ระบุ</span>";
@@ -947,7 +953,12 @@ function renderScores(){
   showPage("<div class='container'><div class='loading'>กำลังโหลด...</div></div>");
   Promise.all([db.ref("subjects").once("value"),db.ref("students").once("value")]).then(function(results){
     var subjects={};
-    if(results[0].exists()) results[0].forEach(function(c){subjects[c.key]=c.val();});
+    if(results[0].exists()) results[0].forEach(function(c){
+      var d=c.val();
+      if(APP.isAdmin || d.createdBy===APP.displayName){
+        subjects[c.key]=d;
+      }
+    });
     var allStudents=[];
     if(results[1].exists()) results[1].forEach(function(c){var d=c.val();allStudents.push({id:c.key,no:d.no,name:d.name,class:d.class});});
     var allClasses=[]; var seen={};
@@ -1390,7 +1401,10 @@ function renderReport(){
     var activities={};
     if(res[2].exists()) res[2].forEach(function(c){activities[c.key]=c.val().note||"";});
     var subjects={};
-    if(res[3].exists()) res[3].forEach(function(c){subjects[c.key]=c.val();});
+    if(res[3].exists()) res[3].forEach(function(c){
+      var d=c.val();
+      if(APP.isAdmin || d.createdBy===APP.displayName){subjects[c.key]=d;}
+    });
     var allStudents=[];
     if(res[4].exists()) res[4].forEach(function(c){var d=c.val();allStudents.push({id:c.key,no:d.no,name:d.name,class:d.class});});
     var allAssignments={};
