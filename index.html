@@ -449,25 +449,46 @@ function renderStudentDB(){
     var h="<div class='container'>";
     h+="<div class='section-header'><div><h2 style='margin:0'>ฐานข้อมูลนักเรียน</h2><div class='text-muted'>"+students.length+" คน จาก "+classes.length+" ห้อง</div></div>";
     h+="<div style='display:flex;gap:.5rem;flex-wrap:wrap'>";
+    h+="<button class='btn btn-blue' id='btnAddOne'><i class='ti ti-user-plus'></i> เพิ่มรายคน</button>";
     h+="<button class='btn btn-yellow' id='btnImportDB'><i class='ti ti-file-spreadsheet'></i> นำเข้า Excel</button>";
     h+="<button class='btn btn-red' id='btnClearDB'><i class='ti ti-trash'></i> ล้างข้อมูล</button>";
     h+="</div></div>";
+    // Search box
+    h+="<div class='search-box' style='margin-bottom:1rem'><i class='ti ti-search'></i><input id='stuDBSearch' placeholder='ค้นหาชื่อ หรือ ห้อง...'></div>";
     if(students.length===0){
-      h+="<div class='card'><div class='empty'><i class='ti ti-users' style='font-size:36px;color:var(--blue-200)'></i><br><br>ยังไม่มีข้อมูลนักเรียน<br><span class='text-muted'>กรุณานำเข้าจาก Excel</span></div></div>";
+      h+="<div class='card'><div class='empty'><i class='ti ti-users' style='font-size:36px;color:var(--blue-200)'></i><br><br>ยังไม่มีข้อมูลนักเรียน<br><span class='text-muted'>เพิ่มรายคน หรือนำเข้าจาก Excel</span></div></div>";
     } else {
       h+="<div class='card'><div class='tab-bar'>";
       classes.forEach(function(cls,i){h+="<button class='tbtn"+(i===0?" active":"")+"' id='stab_"+i+"'>"+escH(cls)+" ("+classMap[cls].length+")</button>";});
       h+="</div>";
       classes.forEach(function(cls,i){
-        h+="<div class='tc"+(i===0?" active":"")+"' id='stc_"+i+"'><div class='table-wrap'><table>";
-        h+="<thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th>ห้อง</th></tr></thead><tbody>";
-        classMap[cls].forEach(function(s){h+="<tr><td>"+s.no+"</td><td>"+escH(s.name)+"</td><td>"+escH(s.class)+"</td></tr>";});
+        h+="<div class='tc"+(i===0?" active":"")+"' id='stc_"+i+"'><div class='table-wrap'><table id='stuTbl_"+i+"'>";
+        h+="<thead><tr><th>เลขที่</th><th>ชื่อ-นามสกุล</th><th>ห้อง</th><th style='text-align:right'>จัดการ</th></tr></thead><tbody>";
+        classMap[cls].forEach(function(s,si){
+          h+="<tr id='str_"+i+"_"+si+"'><td>"+s.no+"</td><td style='font-weight:500'>"+escH(s.name)+"</td><td>"+escH(s.class)+"</td>";
+          h+="<td><div class='td-actions'>";
+          h+="<button class='btn btn-sm btn-yellow' id='editStu_"+i+"_"+si+"'><i class='ti ti-edit'></i></button>";
+          h+="<button class='btn btn-sm' style='color:var(--red-600);border-color:var(--red-100)' id='delStu_"+i+"_"+si+"'><i class='ti ti-trash'></i></button>";
+          h+="</div></td></tr>";
+        });
         h+="</tbody></table></div></div>";
       });
       h+="</div>";
     }
     h+="</div>";
     showPage(h);
+
+    // Search
+    if(G("stuDBSearch")) G("stuDBSearch").addEventListener("input",function(){
+      var q=this.value.toLowerCase();
+      document.querySelectorAll("[id^='stuTbl_'] tbody tr").forEach(function(r){
+        r.style.display=r.textContent.toLowerCase().includes(q)?"":"none";
+      });
+    });
+
+    // Add one student
+    G("btnAddOne").addEventListener("click",openAddOneStudent);
+
     G("btnImportDB").addEventListener("click",openImportStudentDB);
     G("btnClearDB").addEventListener("click",function(){
       Swal.fire({icon:"warning",title:"ล้างข้อมูลนักเรียนทั้งหมด?",confirmButtonText:"ล้างข้อมูล",confirmButtonColor:"#e53e3e",showCancelButton:true,cancelButtonText:"ยกเลิก"})
@@ -480,7 +501,86 @@ function renderStudentDB(){
         document.querySelectorAll(".tc").forEach(function(t){t.classList.remove("active");});
         btn.classList.add("active"); G("stc_"+i).classList.add("active");
       });
+      // Edit/Delete per student
+      classMap[cls].forEach(function(s,si){
+        var eb=G("editStu_"+i+"_"+si);
+        if(eb) eb.addEventListener("click",function(){openEditStudent(s);});
+        var db2=G("delStu_"+i+"_"+si);
+        if(db2) db2.addEventListener("click",function(){
+          Swal.fire({icon:"warning",title:"ลบนักเรียน",
+            html:"ลบ <strong>"+escH(s.name)+"</strong> ห้อง "+escH(s.class)+"?",
+            confirmButtonText:"ลบ",confirmButtonColor:"#e53e3e",showCancelButton:true,cancelButtonText:"ยกเลิก"
+          }).then(function(r2){
+            if(!r2.isConfirmed)return;
+            db.ref("students/"+s.id).remove().then(function(){toast("success","ลบนักเรียนสำเร็จ");renderStudentDB();});
+          });
+        });
+      });
     });
+  });
+}
+
+function openAddOneStudent(){
+  Swal.fire({
+    title:"เพิ่มนักเรียนรายคน",
+    html:"<div style='text-align:left'>"+
+      "<div style='margin-bottom:.75rem'><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'><i class='ti ti-hash'></i> เลขที่</label>"+
+      "<input id='addNo' type='number' min='1' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px' placeholder='เช่น 1, 12, 35'></div>"+
+      "<div style='margin-bottom:.75rem'><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'><i class='ti ti-user'></i> ชื่อ-นามสกุล</label>"+
+      "<input id='addName' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px' placeholder='เช่น นางสาวสมใจ ดีมาก'></div>"+
+      "<div><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'><i class='ti ti-door'></i> ห้องเรียน</label>"+
+      "<input id='addCls' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px' placeholder='เช่น ม.3/1, ม.5/2'></div></div>",
+    confirmButtonText:"เพิ่มนักเรียน",confirmButtonColor:"#2980b9",showCancelButton:true,cancelButtonText:"ยกเลิก",
+    didOpen:function(){document.getElementById("addNo").focus();},
+    preConfirm:function(){
+      var no=document.getElementById("addNo").value.trim();
+      var name=document.getElementById("addName").value.trim();
+      var cls=document.getElementById("addCls").value.trim();
+      if(!no||!name||!cls){Swal.showValidationMessage("กรุณากรอกข้อมูลให้ครบทุกช่อง");return false;}
+      return {no:Number(no),name:name,class:cls};
+    }
+  }).then(function(r){
+    if(!r.isConfirmed)return;
+    var key=makeId(r.value.no,r.value.class);
+    db.ref("students/"+key).set({no:r.value.no,name:r.value.name,class:r.value.class})
+    .then(function(){toast("success","เพิ่มนักเรียนสำเร็จ",r.value.name);renderStudentDB();})
+    .catch(function(e){toast("error","เกิดข้อผิดพลาด",e.message);});
+  });
+}
+
+function openEditStudent(s){
+  Swal.fire({
+    title:"แก้ไขข้อมูลนักเรียน",
+    html:"<div style='text-align:left'>"+
+      "<div style='margin-bottom:.75rem'><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'><i class='ti ti-hash'></i> เลขที่</label>"+
+      "<input id='edNo' type='number' value='"+s.no+"' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px'></div>"+
+      "<div style='margin-bottom:.75rem'><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'><i class='ti ti-user'></i> ชื่อ-นามสกุล</label>"+
+      "<input id='edName' value='"+escH(s.name)+"' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px'></div>"+
+      "<div><label style='font-size:13px;font-weight:600;color:var(--gray-600);display:block;margin-bottom:4px'><i class='ti ti-door'></i> ห้องเรียน</label>"+
+      "<input id='edCls' value='"+escH(s.class)+"' style='font-family:Sarabun;width:100%;padding:9px 12px;border:1.5px solid #cbe8f2;border-radius:10px;font-size:14px'></div></div>",
+    confirmButtonText:"บันทึก",confirmButtonColor:"#2980b9",showCancelButton:true,cancelButtonText:"ยกเลิก",
+    preConfirm:function(){
+      var no=document.getElementById("edNo").value.trim();
+      var name=document.getElementById("edName").value.trim();
+      var cls=document.getElementById("edCls").value.trim();
+      if(!no||!name||!cls){Swal.showValidationMessage("กรุณากรอกข้อมูลให้ครบ");return false;}
+      return {no:Number(no),name:name,class:cls};
+    }
+  }).then(function(r){
+    if(!r.isConfirmed)return;
+    var updates={no:r.value.no,name:r.value.name,class:r.value.class};
+    // ถ้าห้องหรือเลขที่เปลี่ยน ต้องสร้าง key ใหม่
+    var newKey=makeId(r.value.no,r.value.class);
+    if(newKey!==s.id){
+      db.ref("students/"+s.id).remove();
+      db.ref("students/"+newKey).set(updates)
+      .then(function(){toast("success","แก้ไขสำเร็จ");renderStudentDB();})
+      .catch(function(e){toast("error","เกิดข้อผิดพลาด",e.message);});
+    } else {
+      db.ref("students/"+s.id).update(updates)
+      .then(function(){toast("success","แก้ไขสำเร็จ");renderStudentDB();})
+      .catch(function(e){toast("error","เกิดข้อผิดพลาด",e.message);});
+    }
   });
 }
 
